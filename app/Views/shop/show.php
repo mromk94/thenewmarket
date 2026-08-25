@@ -31,6 +31,12 @@
             </div>
         <?php endif; ?>
 
+        <div style="margin:1rem 0;">
+            <span style="font-size:1.25rem; font-weight:700;"><?= number_format((float) $reviewStats['average'], 1) ?></span>
+            <span class="stars" style="--rating: <?= (float) $reviewStats['average'] ?>;" aria-label="<?= number_format((float) $reviewStats['average'], 1) ?> stars"></span>
+            <span style="color:var(--muted); font-size:0.9rem;">· <?= (int) $reviewStats['count'] ?> review<?= (int) $reviewStats['count'] === 1 ? '' : 's' ?></span>
+        </div>
+
         <form action="<?= url('/cart/add') ?>" method="POST" data-ajax-cart="add" style="margin-top:1.5rem;">
             <?= csrf_field() ?>
             <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
@@ -43,4 +49,55 @@
             </div>
         </form>
     </div>
+</section>
+
+<?php if ($canReview): ?>
+<section class="glass-card mt-4" style="padding:1.5rem;">
+    <h2 class="section-title" style="font-size:1.25rem; margin-bottom:1rem;">Write a review</h2>
+    <form action="<?= url('/product/' . $product['slug'] . '/review') ?>" method="POST">
+        <?= csrf_field() ?>
+        <input type="hidden" name="order_id" value="<?= (int) $reviewOrderId ?>">
+        <div class="form-group">
+            <label for="rating">Rating</label>
+            <select id="rating" name="rating" class="form-control" style="max-width:120px;" required>
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Good</option>
+                <option value="3">3 - Average</option>
+                <option value="2">2 - Poor</option>
+                <option value="1">1 - Terrible</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="Summarize your experience">
+        </div>
+        <div class="form-group">
+            <label for="body">Review</label>
+            <textarea id="body" name="body" class="form-control" rows="3" required placeholder="What did you like or dislike?"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit review</button>
+    </form>
+</section>
+<?php endif; ?>
+
+<section class="glass-card mt-4" style="padding:1.5rem;">
+    <h2 class="section-title" style="font-size:1.25rem; margin-bottom:1rem;">Customer reviews</h2>
+    <?php if (empty($reviews)): ?>
+        <p style="color:var(--muted);">No reviews yet.</p>
+    <?php else: ?>
+        <?php foreach ($reviews as $r): ?>
+            <div style="border-bottom:1px solid var(--border); padding:1rem 0;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem;">
+                    <div>
+                        <strong><?= e($r['first_name'] ?? $r['email']) ?> <?= e($r['last_name'] ?? '') ?></strong>
+                        <?php if ($r['is_verified_purchase']): ?><span class="badge" style="background:var(--success); color:#fff; margin-left:0.5rem;">Verified</span><?php endif; ?>
+                    </div>
+                    <span style="color:var(--muted); font-size:0.85rem;"><?= e($r['created_at']) ?></span>
+                </div>
+                <div style="color:#f59e0b; margin:0.25rem 0;"><?= str_repeat('★', (int) $r['rating']) ?><?= str_repeat('☆', 5 - (int) $r['rating']) ?></div>
+                <?php if ($r['title']): ?><h4 style="margin:0.25rem 0; font-size:1rem;"><?= e($r['title']) ?></h4><?php endif; ?>
+                <p style="margin:0; color:var(--text);"><?= e($r['body']) ?></p>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </section>

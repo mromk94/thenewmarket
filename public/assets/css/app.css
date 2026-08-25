@@ -978,6 +978,23 @@ a:hover {
     gap: 0.5rem;
 }
 
+.stars {
+    display: inline-block;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: #f59e0b;
+}
+
+.stars::before {
+    content: '★★★★★';
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #f59e0b calc(var(--rating) / 5 * 100%), #d1d5db calc(var(--rating) / 5 * 100%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
 /* Floating cart */
 .cart-float {
     position: fixed;

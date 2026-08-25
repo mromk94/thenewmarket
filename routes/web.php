@@ -20,6 +20,7 @@ Router::get('/vendors', [HomeController::class, 'vendors'])->name('vendors');
 
 Router::get('/shop', [ShopController::class, 'index'])->name('shop');
 Router::get('/product/{slug}', [ShopController::class, 'show'])->name('product');
+Router::post('/product/{slug}/review', [ShopController::class, 'storeReview'])->name('product.review')->middleware(['auth', 'csrf']);
 
 Router::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
 Router::post('/cart/add', [CartController::class, 'add'])->name('cart.add')->middleware(['auth', 'csrf']);
@@ -133,6 +134,10 @@ Router::post('/admin/payment-methods/{id}/delete', [AdminController::class, 'del
 Router::get('/admin/payment-proofs', [AdminController::class, 'paymentProofs'])->name('admin.payment_proofs')->middleware(['auth', 'admin']);
 Router::post('/admin/payment-proofs/{id}/approve', [AdminController::class, 'approvePaymentProof'])->name('admin.payment_proof.approve')->middleware(['auth', 'admin', 'csrf']);
 Router::post('/admin/payment-proofs/{id}/reject', [AdminController::class, 'rejectPaymentProof'])->name('admin.payment_proof.reject')->middleware(['auth', 'admin', 'csrf']);
+
+Router::get('/admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews')->middleware(['auth', 'admin']);
+Router::post('/admin/reviews/{id}/approve', [AdminController::class, 'approveReview'])->name('admin.review.approve')->middleware(['auth', 'admin', 'csrf']);
+Router::post('/admin/reviews/{id}/reject', [AdminController::class, 'rejectReview'])->name('admin.review.reject')->middleware(['auth', 'admin', 'csrf']);
 
 Router::get('/admin/categories', [AdminController::class, 'categories'])->name('admin.categories')->middleware(['auth', 'admin']);
 Router::post('/admin/categories', [AdminController::class, 'storeCategory'])->name('admin.category.store')->middleware(['auth', 'admin', 'csrf']);

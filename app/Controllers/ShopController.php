@@ -10,6 +10,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\Vendor;
 
 class ShopController
@@ -102,6 +103,36 @@ class ShopController
             }
         }
 
+        $reviews = Review::forProduct((int) $product['id']);
+        $reviewStats = Review::stats((int) $product['id']);
+
+        $canReview = false;
+        $reviewOrderId = 0;
+        $customerId = (int) \App\Core\Session::get('user_id');
+        if ($customerId > 0) {
+            $order = Database::first(
+                "SELECT o.id
+                 FROM orders o
+                 JOIN order_items oi ON oi.order_id = o.id
+                 WHERE o.customer_id = :customer_id
+                   AND o.payment_status = 'paid'
+                   AND oi.product_id = :product_id
+                   AND NOT EXISTS (
+                       SELECT 1 FROM reviews r
+                       WHERE r.customer_id = :customer_id
+                         AND r.product_id = :product_id
+                         AND r.order_id = o.id
+                   )
+                 ORDER BY o.created_at DESC
+                 LIMIT 1",
+                ['customer_id' => $customerId, 'product_id' => $product['id']]
+            );
+            if ($order) {
+                $canReview = true;
+                $reviewOrderId = (int) $order['id'];
+            }
+        }
+
         return Response::view('shop/show', [
             'product' => $product,
             'images' => $images,
@@ -109,6 +140,48 @@ class ShopController
             'affiliateVendorId' => $affiliateVendorId,
             'affiliateVendorName' => $affiliateVendorName,
             'vendorSlug' => $vendorSlug,
+            'reviews' => $reviews,
+            'reviewStats' => $reviewStats,
+            'canReview' => $canReview,
+            'reviewOrderId' => $reviewOrderId,
         ]);
+    }
+
+    public function storeReview(string $slug): void
+    {
+        $product = Product::findBySlug($slug);
+        if (!$product) {
+            throw new HttpException('Product not found.', 404);
+        }
+
+        $customerId = (int) \App\Core\Session::get('user_id');
+        $orderId = (int) Request::input('order_id', 0);
+        $rating = (int) Request::input('rating', 0);
+        $title = trim(Request::input('title', ''));
+        $body = trim(Request::input('body', ''));
+
+        if ($customerId <= 0 || $orderId <= 0 || $rating < 1 || $rating > 5 || empty($body)) {
+            Session::flash('error', 'Rating and review text are required.');
+            Response::redirect('/product/' . $slug);
+        }
+
+        if (!Review::canReview($customerId, (int) $product['id'], $orderId)) {
+            Session::flash('error', 'You cannot review this product.');
+            Response::redirect('/product/' . $slug);
+        }
+
+        Review::create([
+            'product_id' => (int) $product['id'],
+            'customer_id' => $customerId,
+            'order_id' => $orderId,
+            'rating' => $rating,
+            'title' => $title,
+            'body' => $body,
+            'status' => 'pending',
+            'is_verified_purchase' => 1,
+        ]);
+
+        Session::flash('success', 'Thank you! Your review has been submitted for approval.');
+        Response::redirect('/product/' . $slug);
     }
 }

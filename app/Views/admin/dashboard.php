@@ -74,6 +74,11 @@
             <p style="color:var(--muted);">Review customer payment uploads.</p>
             <a href="<?= url('/admin/payment-proofs') ?>" class="btn btn-outline">View proofs</a>
         </div>
+        <div class="glass-card">
+            <h3>Reviews</h3>
+            <p style="color:var(--muted);">Approve customer product reviews.</p>
+            <a href="<?= url('/admin/reviews') ?>" class="btn btn-outline">View reviews</a>
+        </div>
     </div>
 </section>
 

@@ -15,6 +15,7 @@ use App\Models\PaymentMethod;
 use App\Models\PaymentProof;
 use App\Models\Product;
 use App\Models\Refund;
+use App\Models\Review;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\Vendor;
@@ -1001,5 +1002,36 @@ class AdminController
         PaymentProof::setStatus((int) $id, 'rejected', trim(Request::input('admin_note', '')));
         Session::flash('success', 'Payment proof rejected.');
         Response::redirect('/admin/payment-proofs');
+    }
+
+    public function reviews(): string
+    {
+        return Response::view('admin/reviews', [
+            'reviews' => Review::pending(50),
+        ]);
+    }
+
+    public function approveReview(string $id): void
+    {
+        $review = Database::first("SELECT * FROM reviews WHERE id = :id", ['id' => (int) $id]);
+        if (!$review || $review['status'] !== 'pending') {
+            throw new HttpException('Review not found.', 404);
+        }
+
+        Review::setStatus((int) $id, 'approved');
+        Session::flash('success', 'Review approved.');
+        Response::redirect('/admin/reviews');
+    }
+
+    public function rejectReview(string $id): void
+    {
+        $review = Database::first("SELECT * FROM reviews WHERE id = :id", ['id' => (int) $id]);
+        if (!$review || $review['status'] !== 'pending') {
+            throw new HttpException('Review not found.', 404);
+        }
+
+        Review::setStatus((int) $id, 'rejected');
+        Session::flash('success', 'Review rejected.');
+        Response::redirect('/admin/reviews');
     }
 }

@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS reviews (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    product_id INT UNSIGNED NOT NULL,
+    customer_id INT UNSIGNED NOT NULL,
+    order_id INT UNSIGNED NOT NULL,
+    rating TINYINT UNSIGNED NOT NULL,
+    title VARCHAR(255) DEFAULT NULL,
+    body TEXT DEFAULT NULL,
+    status ENUM('pending','approved','rejected') DEFAULT 'pending',
+    is_verified_purchase TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_product (product_id),
+    INDEX idx_customer (customer_id),
+    INDEX idx_status (status),
+    INDEX idx_order (order_id),
+    CONSTRAINT fk_review_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_customer FOREIGN KEY (customer_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
