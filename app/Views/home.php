@@ -49,10 +49,16 @@
 <?php endif; ?>
 
 <div class="trust-bar">
-    <span><span class="trust-icon">🚚</span>Free shipping over $50</span>
-    <span><span class="trust-icon">🔒</span>Secure checkout</span>
-    <span><span class="trust-icon">✅</span>Verified vendors</span>
-    <span><span class="trust-icon">🤝</span>Affiliate rewards</span>
+    <div class="trust-track" aria-label="Trust badges">
+        <span><span class="trust-icon">🚚</span>Free shipping over $50</span>
+        <span><span class="trust-icon">🔒</span>Secure checkout</span>
+        <span><span class="trust-icon">✅</span>Verified vendors</span>
+        <span><span class="trust-icon">🤝</span>Affiliate rewards</span>
+        <span aria-hidden="true"><span class="trust-icon">🚚</span>Free shipping over $50</span>
+        <span aria-hidden="true"><span class="trust-icon">🔒</span>Secure checkout</span>
+        <span aria-hidden="true"><span class="trust-icon">✅</span>Verified vendors</span>
+        <span aria-hidden="true"><span class="trust-icon">🤝</span>Affiliate rewards</span>
+    </div>
 </div>
 
 <?php if (!empty($featured)): ?>

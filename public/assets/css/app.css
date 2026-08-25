@@ -963,11 +963,7 @@ a:hover {
 
 /* Trust bar */
 .trust-bar {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    padding: 1.5rem 1rem;
+    padding: 1rem;
     background: linear-gradient(90deg, #0071e3 0%, #5e5ce6 100%);
     color: #fff;
     font-size: 0.95rem;
@@ -978,6 +974,13 @@ a:hover {
     box-shadow: 0 8px 32px rgba(0, 113, 227, 0.2);
     position: relative;
     overflow: hidden;
+}
+
+.trust-track {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
 }
 
 .trust-bar::before {
@@ -997,7 +1000,7 @@ a:hover {
     100% { left: 200%; }
 }
 
-.trust-bar span {
+.trust-track span {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
@@ -1010,9 +1013,9 @@ a:hover {
     animation: trustFloat 3s ease-in-out infinite;
 }
 
-.trust-bar span:nth-child(2) { animation-delay: 0.2s; }
-.trust-bar span:nth-child(3) { animation-delay: 0.4s; }
-.trust-bar span:nth-child(4) { animation-delay: 0.6s; }
+.trust-track span:nth-child(2) { animation-delay: 0.2s; }
+.trust-track span:nth-child(3) { animation-delay: 0.4s; }
+.trust-track span:nth-child(4) { animation-delay: 0.6s; }
 
 @keyframes trustFloat {
     0%, 100% { transform: translateY(0); }
@@ -1022,6 +1025,31 @@ a:hover {
 .trust-icon {
     font-size: 1.35rem;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+@media (max-width: 768px) {
+    .trust-track {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        width: max-content;
+        animation: trustTicker 18s linear infinite;
+        gap: 1rem;
+    }
+
+    .trust-track span {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        animation: none;
+    }
+
+    .trust-bar::before { display: none; }
+
+    @keyframes trustTicker {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
 }
 
 .stars {
