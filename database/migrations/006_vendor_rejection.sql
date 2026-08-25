@@ -1,0 +1,1 @@
+ALTER TABLE vendors ADD COLUMN IF NOT EXISTS rejection_reason TEXT DEFAULT NULL AFTER status;
