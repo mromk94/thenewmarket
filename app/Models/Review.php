@@ -11,9 +11,10 @@ class Review
     public static function forProduct(int $productId, int $limit = 20): array
     {
         return Database::select(
-            "SELECT r.*, u.first_name, u.last_name, u.email
+            "SELECT r.*, up.first_name, up.last_name, u.email
              FROM reviews r
              JOIN users u ON u.id = r.customer_id
+             LEFT JOIN user_profiles up ON up.user_id = u.id
              WHERE r.product_id = :product_id
                AND r.status = 'approved'
              ORDER BY r.created_at DESC
