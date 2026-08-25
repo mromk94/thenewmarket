@@ -1027,7 +1027,14 @@ a:hover {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
 }
 
+.trust-track span[aria-hidden="true"] {
+    display: none;
+}
+
 @media (max-width: 768px) {
+    .trust-track span[aria-hidden="true"] {
+        display: inline-flex;
+    }
     .trust-track {
         flex-wrap: nowrap;
         justify-content: flex-start;
