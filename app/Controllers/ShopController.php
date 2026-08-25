@@ -24,10 +24,13 @@ class ShopController
         $maxPrice = Request::input('max_price', '');
         $vendorId = Request::input('vendor', '');
         $availability = Request::input('availability', '');
+        $page = max(1, (int) Request::input('page', 1));
+        $perPage = 12;
 
         $filters = [
             'search' => $search,
             'sort' => $sort,
+            'page' => $page,
         ];
 
         if (!empty($category)) {
@@ -54,6 +57,8 @@ class ShopController
         }
 
         $products = Product::findPublished($filters);
+        $total = Product::countPublished($filters);
+        $lastPage = max(1, (int) ceil($total / $perPage));
         $categories = Category::allVisible();
         $vendors = Vendor::findApproved();
 
@@ -68,6 +73,9 @@ class ShopController
             'maxPrice' => $maxPrice,
             'currentVendor' => $vendorId,
             'availability' => $availability,
+            'page' => $page,
+            'lastPage' => $lastPage,
+            'total' => $total,
         ]);
     }
 

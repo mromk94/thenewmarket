@@ -32,6 +32,53 @@ class Product
         );
     }
 
+    public static function countPublished(array $filters = []): int
+    {
+        $where = ["p.status = 'published'", "p.visibility = 'public'"];
+        $params = [];
+
+        if (!empty($filters['category_id'])) {
+            $where[] = 'p.category_id = :category_id';
+            $params['category_id'] = $filters['category_id'];
+        }
+
+        if (!empty($filters['search'])) {
+            $where[] = '(p.name LIKE :search OR p.short_description LIKE :search OR p.description LIKE :search)';
+            $params['search'] = '%' . $filters['search'] . '%';
+        }
+
+        if (!empty($filters['min_price'])) {
+            $where[] = 'p.price >= :min_price';
+            $params['min_price'] = $filters['min_price'];
+        }
+
+        if (!empty($filters['max_price'])) {
+            $where[] = 'p.price <= :max_price';
+            $params['max_price'] = $filters['max_price'];
+        }
+
+        if (!empty($filters['vendor_id'])) {
+            $where[] = 'p.vendor_id = :vendor_id';
+            $params['vendor_id'] = $filters['vendor_id'];
+        }
+
+        if (!empty($filters['availability'])) {
+            $where[] = 'p.inventory_status = :availability';
+            $params['availability'] = $filters['availability'];
+        }
+
+        $whereSql = implode(' AND ', $where);
+
+        $row = Database::first(
+            "SELECT COUNT(*) as c
+             FROM products p
+             LEFT JOIN vendors v ON v.id = p.vendor_id
+             WHERE {$whereSql}",
+            $params
+        );
+        return (int) ($row['c'] ?? 0);
+    }
+
     public static function findPublished(array $filters = []): array
     {
         $where = ["p.status = 'published'", "p.visibility = 'public'"];

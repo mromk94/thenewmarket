@@ -52,8 +52,8 @@
         <?php foreach ($products as $p): ?>
             <div class="glass-card" style="display:flex; flex-direction:column; justify-content:space-between;">
                 <div>
-                    <div style="width:100%; height:160px; background:rgba(255,255,255,0.05); border-radius:0.5rem; margin-bottom:0.75rem; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:0.9rem;">
-                        <?= $p['thumbnail'] ? '<img src="' . e(asset($p['thumbnail'])) . '" alt="" style="max-height:100%; max-width:100%; border-radius:0.5rem;">' : 'No image' ?>
+                    <div class="img-preview" style="display:flex; align-items:center; justify-content:center;">
+                        <?= $p['thumbnail'] ? '<img src="' . e(asset($p['thumbnail'])) . '" alt="" style="width:100%; height:100%; object-fit:cover; border-radius:0.5rem;">' : 'No image' ?>
                     </div>
                     <h3 style="margin:0 0 0.25rem;"><a href="<?= url('/product/' . $p['slug']) ?>"><?= e($p['name']) ?></a></h3>
                     <p style="color:var(--muted); font-size:0.9rem; margin:0 0 0.5rem;"><?= e($p['category_name'] ?? '') ?> · <?= e($p['vendor_name'] ?? 'Marketplace') ?></p>
@@ -64,3 +64,41 @@
         <?php endforeach; ?>
     <?php endif; ?>
 </section>
+
+<?php if ($lastPage > 1): ?>
+    <?php
+        $queryParams = [];
+        if ($search) $queryParams['search'] = $search;
+        if ($currentCategory) $queryParams['category'] = $currentCategory;
+        if ($currentVendor) $queryParams['vendor'] = $currentVendor;
+        if ($availability) $queryParams['availability'] = $availability;
+        if ($minPrice !== '') $queryParams['min_price'] = $minPrice;
+        if ($maxPrice !== '') $queryParams['max_price'] = $maxPrice;
+        if ($sort !== 'featured') $queryParams['sort'] = $sort;
+        function shop_page_url($page, $params) {
+            $params['page'] = $page;
+            return url('/shop?' . http_build_query($params));
+        }
+    ?>
+    <nav class="pagination" style="display:flex; justify-content:center; align-items:center; gap:0.5rem; margin-top:2rem; flex-wrap:wrap;">
+        <?php if ($page > 1): ?>
+            <a href="<?= shop_page_url($page - 1, $queryParams) ?>" class="btn btn-outline">&larr; Prev</a>
+        <?php else: ?>
+            <span class="btn btn-outline" style="opacity:0.5;">&larr; Prev</span>
+        <?php endif; ?>
+
+        <?php for ($i = 1; $i <= $lastPage; $i++): ?>
+            <?php if ($i === $page): ?>
+                <span class="btn btn-primary" style="min-width:44px;"><?= $i ?></span>
+            <?php else: ?>
+                <a href="<?= shop_page_url($i, $queryParams) ?>" class="btn btn-outline" style="min-width:44px;"><?= $i ?></a>
+            <?php endif; ?>
+        <?php endfor; ?>
+
+        <?php if ($page < $lastPage): ?>
+            <a href="<?= shop_page_url($page + 1, $queryParams) ?>" class="btn btn-outline">Next &rarr;</a>
+        <?php else: ?>
+            <span class="btn btn-outline" style="opacity:0.5;">Next &rarr;</span>
+        <?php endif; ?>
+    </nav>
+<?php endif; ?>
