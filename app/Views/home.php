@@ -49,10 +49,10 @@
 <?php endif; ?>
 
 <div class="trust-bar">
-    <span>Free shipping over $50</span>
-    <span>Secure checkout</span>
-    <span>Verified vendors</span>
-    <span>Affiliate rewards</span>
+    <span><span class="trust-icon">🚚</span>Free shipping over $50</span>
+    <span><span class="trust-icon">🔒</span>Secure checkout</span>
+    <span><span class="trust-icon">✅</span>Verified vendors</span>
+    <span><span class="trust-icon">🤝</span>Affiliate rewards</span>
 </div>
 
 <?php if (!empty($featured)): ?>
