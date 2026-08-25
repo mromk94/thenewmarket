@@ -132,17 +132,11 @@
                     </div>
                     <div style="display:flex; gap:0.35rem; justify-content:center; flex-wrap:wrap; margin-top:0.5rem;">
                         <?php if (!$img['is_thumbnail']): ?>
-                            <form action="<?= url('/admin/products/' . $product['id'] . '/images/' . $img['id'] . '/thumbnail') ?>" method="POST" style="display:inline;">
-                                <?= csrf_field() ?>
-                                <button type="submit" class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.8rem;">Thumb</button>
-                            </form>
+                            <button type="submit" class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.8rem;" formaction="<?= url('/admin/products/' . $product['id'] . '/images/' . $img['id'] . '/thumbnail') ?>" formenctype="application/x-www-form-urlencoded">Thumb</button>
                         <?php else: ?>
                             <span class="btn btn-primary" style="padding:0.25rem 0.5rem; font-size:0.8rem;">Thumbnail</span>
                         <?php endif; ?>
-                        <form action="<?= url('/admin/products/' . $product['id'] . '/images/' . $img['id'] . '/delete') ?>" method="POST" style="display:inline;" onsubmit="return confirm('Delete this image?');">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.8rem; color:#dc2626; border-color:#dc2626;">Delete</button>
-                        </form>
+                        <button type="submit" class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.8rem; color:#dc2626; border-color:#dc2626;" formaction="<?= url('/admin/products/' . $product['id'] . '/images/' . $img['id'] . '/delete') ?>" formenctype="application/x-www-form-urlencoded" onclick="return confirm('Delete this image?');">Delete</button>
                     </div>
                 </div>
             <?php endforeach; ?>

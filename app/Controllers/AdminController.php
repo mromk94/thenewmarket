@@ -494,7 +494,8 @@ class AdminController
                         'error' => $_FILES['images']['error'][$i],
                         'size' => $_FILES['images']['size'][$i],
                     ], 'products');
-                    Product::attachImage($productId, $uploaded['path'], false, $currentCount + $i);
+                    $isFirst = ($currentCount === 0 && $i === 0);
+                    Product::attachImage($productId, $uploaded['path'], $isFirst, $currentCount + $i);
                 }
             }
         }
