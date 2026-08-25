@@ -41,15 +41,6 @@ CREATE TABLE IF NOT EXISTS email_verifications (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS password_resets (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    token VARCHAR(255) NOT NULL UNIQUE,
-    expires_at DATETIME NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_email (email)
-) ENGINE=InnoDB;
-
 CREATE TABLE IF NOT EXISTS vendors (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL UNIQUE,
@@ -352,16 +343,6 @@ CREATE TABLE IF NOT EXISTS coupons (
     used_count INT UNSIGNED DEFAULT 0,
     expires_at DATETIME NULL,
     is_active TINYINT(1) DEFAULT 1
-) ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS settings (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `group` VARCHAR(50) NOT NULL,
-    `key` VARCHAR(100) NOT NULL,
-    value TEXT NULL,
-    is_encrypted TINYINT(1) DEFAULT 0,
-    UNIQUE KEY uniq_group_key (`group`, `key`),
-    INDEX idx_group (`group`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS email_templates (
