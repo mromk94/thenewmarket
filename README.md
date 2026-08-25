@@ -73,7 +73,9 @@ A premium, multi-vendor e-commerce marketplace with affiliate storefronts, built
 
 1. Create a MySQL database and user in cPanel.
 2. Upload `thenewmarket.zip` and extract it to a folder outside `public_html`.
-3. Point your addon domain document root to the `public/` folder (or move `public/` contents into `public_html`).
+3. Point your addon domain document root to the `public/` folder.
+
+   Alternatively, if `public_html` is the document root, extract the zip directly into `public_html` — the included `.htaccess` will route traffic into `public/` automatically.
 4. Make `storage/logs`, `storage/cache`, and `storage/uploads` writable.
 5. Visit `https://yourdomain.com/install` and complete the web installer.
 6. Enable HTTPS in cPanel.
