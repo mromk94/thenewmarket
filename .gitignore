@@ -20,6 +20,7 @@ admin_cookies.txt
 cust_cookies.txt
 forgot_cookies.txt
 vend_cookies.txt
+/img/
 /public/assets/images/products/*
 /public/assets/images/deposit-receipts/*
 /public/assets/images/payment-proofs/*
