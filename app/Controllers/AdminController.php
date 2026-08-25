@@ -68,12 +68,19 @@ class AdminController
         $productId = (int) $id;
         $action = Request::input('action');
 
+        $product = Product::findById($productId);
+        if (!$product) {
+            throw new HttpException('Product not found.', 404);
+        }
+
         switch ($action) {
             case 'approve':
+                Product::setStatus($productId, 'approved');
+                break;
             case 'publish':
-                Product::setStatus($productId, $action === 'approve' ? 'approved' : 'published');
-                $product = Product::findById($productId);
-                if ($product) {
+                $wasPublished = $product['status'] === 'published';
+                Product::setStatus($productId, 'published');
+                if (!$wasPublished) {
                     $vendor = Vendor::findById((int) $product['vendor_id']);
                     $user = $vendor ? Database::first("SELECT email FROM users WHERE id = :id", ['id' => $vendor['user_id']]) : null;
                     if ($user) {
@@ -1116,6 +1123,17 @@ class AdminController
         ]);
     }
 
+    public function editCoupon(string $id): string
+    {
+        $coupon = Coupon::findById((int) $id);
+        if (!$coupon) {
+            throw new HttpException('Coupon not found.', 404);
+        }
+        return Response::view('admin/coupons/edit', [
+            'coupon' => $coupon,
+        ]);
+    }
+
     public function storeCoupon(): void
     {
         $code = strtoupper(trim(Request::input('code', '')));
@@ -1182,5 +1200,48 @@ class AdminController
         Coupon::delete((int) $id);
         Session::flash('success', 'Coupon deleted.');
         Response::redirect('/admin/coupons');
+    }
+
+    public function emailTemplates(): string
+    {
+        return Response::view('admin/email_templates', [
+            'templates' => EmailTemplate::all(),
+        ]);
+    }
+
+    public function editEmailTemplate(string $id): string
+    {
+        $template = EmailTemplate::findById((int) $id);
+        if (!$template) {
+            throw new HttpException('Email template not found.', 404);
+        }
+        return Response::view('admin/email_templates/edit', [
+            'template' => $template,
+        ]);
+    }
+
+    public function updateEmailTemplate(string $id): void
+    {
+        $template = EmailTemplate::findById((int) $id);
+        if (!$template) {
+            throw new HttpException('Email template not found.', 404);
+        }
+
+        $subject = trim(Request::input('subject', ''));
+        $body = trim(Request::input('body', ''));
+
+        if (empty($subject) || empty($body)) {
+            Session::flash('error', 'Subject and body are required.');
+            Response::redirect('/admin/email-templates/' . $id . '/edit');
+        }
+
+        EmailTemplate::update((int) $id, [
+            'subject' => $subject,
+            'body' => $body,
+            'is_active' => (int) Request::input('is_active', 1),
+        ]);
+
+        Session::flash('success', 'Email template updated.');
+        Response::redirect('/admin/email-templates');
     }
 }

@@ -143,6 +143,11 @@ Router::post('/admin/reviews/{id}/reject', [AdminController::class, 'rejectRevie
 
 Router::get('/admin/coupons', [AdminController::class, 'coupons'])->name('admin.coupons')->middleware(['auth', 'admin']);
 Router::post('/admin/coupons', [AdminController::class, 'storeCoupon'])->name('admin.coupon.store')->middleware(['auth', 'admin', 'csrf']);
+Router::get('/admin/coupons/{id}/edit', [AdminController::class, 'editCoupon'])->name('admin.coupon.edit')->middleware(['auth', 'admin']);
+
+Router::get('/admin/email-templates', [AdminController::class, 'emailTemplates'])->name('admin.email_templates')->middleware(['auth', 'admin']);
+Router::get('/admin/email-templates/{id}/edit', [AdminController::class, 'editEmailTemplate'])->name('admin.email_template.edit')->middleware(['auth', 'admin']);
+Router::post('/admin/email-templates/{id}', [AdminController::class, 'updateEmailTemplate'])->name('admin.email_template.update')->middleware(['auth', 'admin', 'csrf']);
 Router::post('/admin/coupons/{id}', [AdminController::class, 'updateCoupon'])->name('admin.coupon.update')->middleware(['auth', 'admin', 'csrf']);
 Router::post('/admin/coupons/{id}/delete', [AdminController::class, 'deleteCoupon'])->name('admin.coupon.delete')->middleware(['auth', 'admin', 'csrf']);
 

@@ -84,6 +84,11 @@
             <p style="color:var(--muted);">Create and manage discount codes.</p>
             <a href="<?= url('/admin/coupons') ?>" class="btn btn-outline">View coupons</a>
         </div>
+        <div class="glass-card">
+            <h3>Email Templates</h3>
+            <p style="color:var(--muted);">Edit transactional email content.</p>
+            <a href="<?= url('/admin/email-templates') ?>" class="btn btn-outline">Edit templates</a>
+        </div>
     </div>
 </section>
 

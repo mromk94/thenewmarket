@@ -77,9 +77,10 @@
                         <td><?= e($c['valid_from'] ?? '—') ?> - <?= e($c['valid_to'] ?? '—') ?></td>
                         <td><?= (int) $c['is_active'] ? 'Yes' : 'No' ?></td>
                         <td style="text-align:right;">
+                            <a href="<?= url('/admin/coupons/' . $c['id'] . '/edit') ?>" class="btn btn-outline" style="padding:0.3rem 0.6rem;">Edit</a>
                             <form action="<?= url('/admin/coupons/' . $c['id'] . '/delete') ?>" method="POST" style="display:inline;">
                                 <?= csrf_field() ?>
-                                <button type="submit" class="btn btn-outline" style="color:#dc2626; border-color:#dc2626;">Delete</button>
+                                <button type="submit" class="btn btn-outline" style="padding:0.3rem 0.6rem; color:#dc2626; border-color:#dc2626;">Delete</button>
                             </form>
                         </td>
                     </tr>

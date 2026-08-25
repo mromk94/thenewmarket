@@ -24,6 +24,14 @@ class EmailTemplate
         );
     }
 
+    public static function findById(int $id): ?array
+    {
+        return Database::first(
+            "SELECT * FROM email_templates WHERE id = :id",
+            ['id' => $id]
+        );
+    }
+
     public static function create(array $data): int
     {
         return Database::insert('email_templates', $data);
