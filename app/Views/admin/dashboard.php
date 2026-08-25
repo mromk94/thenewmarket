@@ -90,6 +90,11 @@
             <a href="<?= url('/admin/email-templates') ?>" class="btn btn-outline">Edit templates</a>
         </div>
         <div class="glass-card">
+            <h3>Content Pages</h3>
+            <p style="color:var(--muted);">Edit about, contact, terms and privacy.</p>
+            <a href="<?= url('/admin/pages') ?>" class="btn btn-outline">Edit pages</a>
+        </div>
+        <div class="glass-card">
             <h3>Notifications</h3>
             <p style="color:var(--muted);">Broadcast in-app messages.</p>
             <a href="<?= url('/admin/notifications') ?>" class="btn btn-outline">Send notification</a>

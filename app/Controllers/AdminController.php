@@ -1244,4 +1244,48 @@ class AdminController
         Session::flash('success', 'Email template updated.');
         Response::redirect('/admin/email-templates');
     }
+
+    public function pages(): string
+    {
+        return Response::view('admin/pages', [
+            'pages' => \App\Models\Page::all(),
+        ]);
+    }
+
+    public function editPage(string $id): string
+    {
+        $page = \App\Models\Page::findById((int) $id);
+        if (!$page) {
+            throw new HttpException('Page not found.', 404);
+        }
+        return Response::view('admin/pages/edit', [
+            'page' => $page,
+        ]);
+    }
+
+    public function updatePage(string $id): void
+    {
+        $page = \App\Models\Page::findById((int) $id);
+        if (!$page) {
+            throw new HttpException('Page not found.', 404);
+        }
+
+        $title = trim(Request::input('title', ''));
+        $content = trim(Request::input('content', ''));
+
+        if (empty($title) || empty($content)) {
+            Session::flash('error', 'Title and content are required.');
+            Response::redirect('/admin/pages/' . $id . '/edit');
+        }
+
+        \App\Models\Page::update((int) $id, [
+            'title' => $title,
+            'content' => $content,
+            'meta_description' => trim(Request::input('meta_description', '')),
+            'is_active' => (int) Request::input('is_active', 1),
+        ]);
+
+        Session::flash('success', 'Page updated.');
+        Response::redirect('/admin/pages');
+    }
 }

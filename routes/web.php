@@ -8,6 +8,7 @@ use App\Controllers\AuthController;
 use App\Controllers\CartController;
 use App\Controllers\CheckoutController;
 use App\Controllers\HomeController;
+use App\Controllers\PagesController;
 use App\Controllers\PaymentController;
 use App\Controllers\RobotsController;
 use App\Controllers\ShopController;
@@ -148,6 +149,10 @@ Router::get('/admin/coupons/{id}/edit', [AdminController::class, 'editCoupon'])-
 Router::get('/admin/email-templates', [AdminController::class, 'emailTemplates'])->name('admin.email_templates')->middleware(['auth', 'admin']);
 Router::get('/admin/email-templates/{id}/edit', [AdminController::class, 'editEmailTemplate'])->name('admin.email_template.edit')->middleware(['auth', 'admin']);
 Router::post('/admin/email-templates/{id}', [AdminController::class, 'updateEmailTemplate'])->name('admin.email_template.update')->middleware(['auth', 'admin', 'csrf']);
+
+Router::get('/admin/pages', [AdminController::class, 'pages'])->name('admin.pages')->middleware(['auth', 'admin']);
+Router::get('/admin/pages/{id}/edit', [AdminController::class, 'editPage'])->name('admin.page.edit')->middleware(['auth', 'admin']);
+Router::post('/admin/pages/{id}', [AdminController::class, 'updatePage'])->name('admin.page.update')->middleware(['auth', 'admin', 'csrf']);
 Router::post('/admin/coupons/{id}', [AdminController::class, 'updateCoupon'])->name('admin.coupon.update')->middleware(['auth', 'admin', 'csrf']);
 Router::post('/admin/coupons/{id}/delete', [AdminController::class, 'deleteCoupon'])->name('admin.coupon.delete')->middleware(['auth', 'admin', 'csrf']);
 
@@ -160,6 +165,11 @@ Router::post('/admin/categories/{id}/delete', [AdminController::class, 'deleteCa
 Router::get('/admin/settings/{group}', [AdminController::class, 'settings'])->name('admin.settings')->middleware(['auth', 'admin']);
 Router::post('/admin/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update')->middleware(['auth', 'admin', 'csrf']);
 Router::post('/admin/settings/mail/test', [AdminController::class, 'sendTestEmail'])->name('admin.settings.mail.test')->middleware(['auth', 'admin', 'csrf']);
+
+Router::get('/about', [PagesController::class, 'about'])->name('about');
+Router::get('/contact', [PagesController::class, 'contact'])->name('contact');
+Router::get('/terms', [PagesController::class, 'terms'])->name('terms');
+Router::get('/privacy', [PagesController::class, 'privacy'])->name('privacy');
 
 Router::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Router::get('/robots.txt', [RobotsController::class, 'index'])->name('robots');

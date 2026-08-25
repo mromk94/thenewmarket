@@ -5,8 +5,10 @@
             <p style="margin:0; color:var(--muted);">&copy; <?= date('Y') ?> <?= e(config('app.name')) ?>. All rights reserved.</p>
         </div>
         <div class="footer-links">
-            <a href="<?= url('/sitemap.xml') ?>">Sitemap</a>
-            <a href="<?= url('/robots.txt') ?>">Robots</a>
+            <a href="<?= url('/about') ?>">About</a>
+            <a href="<?= url('/contact') ?>">Contact</a>
+            <a href="<?= url('/terms') ?>">Terms</a>
+            <a href="<?= url('/privacy') ?>">Privacy</a>
             <a href="<?= url('/shop') ?>">Shop</a>
             <a href="<?= url('/vendors') ?>">Vendors</a>
         </div>

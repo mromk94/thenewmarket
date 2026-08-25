@@ -1,19 +1,21 @@
 # The New Age Marketplace
 
-A modern, multi-vendor e-commerce marketplace built with PHP 8.1+, MySQL, and a custom lightweight MVC architecture. Designed to run on standard cPanel / Namecheap shared hosting without Node.js, Docker, Redis, or background workers.
+A premium, multi-vendor e-commerce marketplace with affiliate storefronts, built in PHP 8.1 and MySQL. Curated products, vendor self-service, admin moderation, commission tracking, secure checkout, and content-managed pages — ready for cPanel / shared hosting with no Node.js or Docker required.
 
 ---
 
 ## Features
 
-- Customer storefront with search, filters, and category browsing
-- Vendor registration, storefront, product management, and wallet
+- Customer storefront with search, filters, categories and product reviews
+- Vendor registration, storefront, product management and wallet
 - Affiliate marketplace: vendors promote admin products and earn commission
-- Admin dashboard and user/vendor/product management (skeleton ready for expansion)
-- Cart and checkout with server-side price locking
+- Admin dashboard with product, vendor, user, category, coupon, email template and page management
+- Cart and checkout with server-side price locking and coupon support
 - Payment abstraction with a `TestPaymentProvider` (Paystack/Flutterwave/Stripe ready)
 - Customer and vendor wallets with an immutable ledger
 - Order lifecycle and affiliate commission recording
+- Customer reviews and ratings
+- Editable content pages (about, contact, terms, privacy)
 - CSRF, XSS, SQL-injection, and rate-limiting protections
 - SEO sitemap, robots.txt, and responsive glassmorphism UI
 
@@ -69,43 +71,18 @@ A modern, multi-vendor e-commerce marketplace built with PHP 8.1+, MySQL, and a 
 
 ## cPanel / Namecheap Deployment
 
-1. On your PC, run:
-
-   ```bash
-   composer install --no-dev
-   php install.php
-   ```
-
-2. Export the production database (`mysqldump` or export from phpMyAdmin).
-3. Create a MySQL database, user, and password in cPanel.
-4. Upload the project files to your hosting account.
-5. Recommended structure:
-
-   - Place `public/` contents into `public_html` (or point the addon domain document root to `public/`).
-   - Keep `app/`, `config/`, `database/`, `storage/`, `vendor/`, `.env`, and `cron/` outside the document root.
-
-6. Import the database in cPanel phpMyAdmin.
-7. Create `.env` from `.env.example` with production values:
-
-   ```
-   APP_ENV=production
-   APP_URL=https://yourdomain.com
-   APP_DEBUG=false
-   DB_HOST=localhost
-   DB_DATABASE=your_db
-   DB_USERNAME=your_user
-   DB_PASSWORD=your_password
-   ```
-
-8. Create the `storage/logs`, `storage/cache`, and `storage/uploads` directories and make them writable (`755` or `775`).
-9. Configure cPanel cron:
+1. Create a MySQL database and user in cPanel.
+2. Upload `thenewmarket.zip` and extract it to a folder outside `public_html`.
+3. Point your addon domain document root to the `public/` folder (or move `public/` contents into `public_html`).
+4. Make `storage/logs`, `storage/cache`, and `storage/uploads` writable.
+5. Visit `https://yourdomain.com/install` and complete the web installer.
+6. Enable HTTPS in cPanel.
+7. After installation, delete `public/install.php`.
+8. Configure cPanel cron:
 
    ```
    /usr/local/bin/php /home/username/marketplace/cron/cron.php >> /home/username/marketplace/storage/logs/cron.log 2>&1
    ```
-
-10. Enable HTTPS in cPanel.
-11. Delete or remove `install.php` from the server after installation.
 
 ---
 
