@@ -176,7 +176,7 @@ class CartService
 
         $couponDiscount = 0.0;
         if ($coupon) {
-            $couponDiscount = \App\Models\Coupon::calculateDiscount($coupon, $subtotal - $baseDiscount);
+            $couponDiscount = \App\Models\Coupon::calculateDiscount($coupon, $subtotal);
         }
 
         $discount = $baseDiscount + $couponDiscount;
