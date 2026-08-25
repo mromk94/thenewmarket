@@ -56,6 +56,19 @@ class Response
         $viewFile = BASE_PATH . "/app/Views/errors/{$code}.php";
         $view = file_exists($viewFile) ? "errors/{$code}" : 'errors/500';
 
-        return View::render($view, ['code' => $code, 'message' => $message]);
+        try {
+            return View::render($view, ['code' => $code, 'message' => $message], 'error');
+        } catch (\Throwable $e) {
+            return self::plainError($code, $message);
+        }
+    }
+
+    private static function plainError(int $code, string $message): string
+    {
+        return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
+            . '<title>Error ' . $code . '</title></head><body style="font-family:sans-serif; padding:2rem;">'
+            . '<h1>Error ' . $code . '</h1>'
+            . '<p>' . e($message) . '</p>'
+            . '</body></html>';
     }
 }

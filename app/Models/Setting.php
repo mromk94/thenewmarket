@@ -12,10 +12,14 @@ class Setting
 
     public static function all(): array
     {
-        return Database::select(
-            "SELECT * FROM settings ORDER BY setting_group, setting_key",
-            []
-        );
+        try {
+            return Database::select(
+                "SELECT * FROM settings ORDER BY setting_group, setting_key",
+                []
+            );
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 
     public static function grouped(): array
@@ -31,7 +35,11 @@ class Setting
     public static function get(string $group, string $key, mixed $default = null): mixed
     {
         if (self::$cache === null) {
-            self::$cache = self::grouped();
+            try {
+                self::$cache = self::grouped();
+            } catch (\Throwable $e) {
+                self::$cache = [];
+            }
         }
 
         return self::$cache[$group][$key] ?? $default;
@@ -45,16 +53,20 @@ class Setting
 
         self::$cache[$group][$key] = $value;
 
-        Database::query(
-            "INSERT INTO settings (setting_group, setting_key, setting_value)
-             VALUES (:group, :key, :value)
-             ON DUPLICATE KEY UPDATE setting_value = :value",
-            [
-                'group' => $group,
-                'key' => $key,
-                'value' => is_array($value) ? json_encode($value) : (string) $value,
-            ]
-        );
+        try {
+            Database::query(
+                "INSERT INTO settings (setting_group, setting_key, setting_value)
+                 VALUES (:group, :key, :value)
+                 ON DUPLICATE KEY UPDATE setting_value = :value",
+                [
+                    'group' => $group,
+                    'key' => $key,
+                    'value' => is_array($value) ? json_encode($value) : (string) $value,
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Fail silently during partial installs or DB issues
+        }
     }
 
     public static function setMany(string $group, array $values): void
