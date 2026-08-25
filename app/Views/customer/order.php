@@ -6,8 +6,8 @@
     </p>
 </section>
 
-<section class="glass-card mt-4" style="padding: 1.5rem;">
-    <table style="width:100%; border-collapse:collapse; margin-bottom:1.5rem;">
+<section class="glass-card mt-4" style="padding: 1.5rem; overflow-x: auto;">
+    <table style="width:100%; min-width:560px; border-collapse:collapse; margin-bottom:1.5rem;">
         <thead>
             <tr style="text-align:left; color:var(--muted); border-bottom:1px solid var(--border);">
                 <th>Product</th>

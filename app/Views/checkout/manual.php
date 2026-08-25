@@ -3,7 +3,7 @@
     <p>Send the payment and upload your proof.</p>
 </section>
 
-<section class="card-grid mt-4" style="grid-template-columns: 1fr 1fr;">
+<section class="card-grid mt-4 checkout-manual-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
     <div class="glass-card" style="padding:1.5rem;">
         <h2 class="mb-2"><?= e($method['name']) ?></h2>
         <p style="color:var(--muted); font-size:0.9rem; margin:0 0 1rem;">Currency: <?= e($method['currency']) ?> · Type: <?= e($method['type']) ?></p>

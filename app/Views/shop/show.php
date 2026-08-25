@@ -1,4 +1,4 @@
-<section class="glass-card mt-4" style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 2rem;">
+<section class="glass-card mt-4" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; padding: 2rem;">
     <div>
         <div style="width:100%; height:360px; background:rgba(255,255,255,0.05); border-radius:0.75rem; display:flex; align-items:center; justify-content:center; color:var(--muted);">
             <?= $thumbnail ? '<img src="' . e(asset($thumbnail)) . '" alt="" style="max-height:100%; max-width:100%; border-radius:0.75rem;">' : 'No image' ?>

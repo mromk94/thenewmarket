@@ -3,7 +3,7 @@
     <p>Review your order and choose how to pay.</p>
 </section>
 
-<form action="<?= url('/checkout') ?>" method="POST" class="card-grid mt-4" id="checkout-form" style="grid-template-columns: 2fr 1fr;">
+<form action="<?= url('/checkout') ?>" method="POST" class="card-grid mt-4 checkout-grid" id="checkout-form" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
     <?= csrf_field() ?>
     <input type="hidden" id="payment_method_id" name="payment_method_id" value="0">
 

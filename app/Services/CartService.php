@@ -140,6 +140,18 @@ class CartService
         );
     }
 
+    public static function count(int $userId): int
+    {
+        $row = Database::first(
+            "SELECT COALESCE(SUM(ci.quantity), 0) as c
+             FROM cart c
+             JOIN cart_items ci ON ci.cart_id = c.id
+             WHERE c.user_id = :user_id",
+            ['user_id' => $userId]
+        );
+        return (int) ($row['c'] ?? 0);
+    }
+
     public static function total(array $items): float
     {
         $total = 0.0;
