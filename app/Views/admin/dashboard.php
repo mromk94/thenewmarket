@@ -89,6 +89,16 @@
             <p style="color:var(--muted);">Edit transactional email content.</p>
             <a href="<?= url('/admin/email-templates') ?>" class="btn btn-outline">Edit templates</a>
         </div>
+        <div class="glass-card">
+            <h3>Notifications</h3>
+            <p style="color:var(--muted);">Broadcast in-app messages.</p>
+            <a href="<?= url('/admin/notifications') ?>" class="btn btn-outline">Send notification</a>
+        </div>
+        <div class="glass-card">
+            <h3>Refunds</h3>
+            <p style="color:var(--muted);">Review customer refund requests.</p>
+            <a href="<?= url('/admin/refunds') ?>" class="btn btn-outline">View refunds</a>
+        </div>
     </div>
 </section>
 
