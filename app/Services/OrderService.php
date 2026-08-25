@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Core\Database;
 use App\Core\HttpException;
 use App\Core\Logger;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Services\CartService;
 use App\Services\Mailer;
@@ -37,7 +38,7 @@ class OrderService
         );
     }
 
-    public static function create(int $customerId, array $cartItems): array
+    public static function create(int $customerId, array $cartItems, ?array $coupon = null): array
     {
         if (empty($cartItems)) {
             throw new HttpException('Your cart is empty.', 422);
@@ -111,14 +112,14 @@ class OrderService
                 ]);
             }
 
-            $subtotal = round($subtotal, 4);
-            $summary = CartService::summary($cartItems);
+            $summary = CartService::summary($cartItems, $coupon);
 
             Database::update(
                 'orders',
                 [
                     'subtotal' => $summary['subtotal'],
                     'discount' => $summary['discount'],
+                    'coupon_code' => $coupon['code'] ?? null,
                     'tax' => $summary['tax'],
                     'shipping' => $summary['shipping'],
                     'total' => $summary['total'],
@@ -195,6 +196,13 @@ class OrderService
             }
 
             Database::commit();
+
+            if (!empty($order['coupon_code'])) {
+                $coupon = Coupon::findByCode($order['coupon_code']);
+                if ($coupon && Coupon::isValid($coupon, (float) $order['subtotal'])) {
+                    Coupon::incrementUses((int) $coupon['id']);
+                }
+            }
 
             $customer = Database::first("SELECT email FROM users WHERE id = :id", ['id' => $order['customer_id']]);
             if ($customer) {

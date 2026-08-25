@@ -26,6 +26,8 @@ Router::get('/cart', [CartController::class, 'index'])->name('cart')->middleware
 Router::post('/cart/add', [CartController::class, 'add'])->name('cart.add')->middleware(['auth', 'csrf']);
 Router::post('/cart/{id}/update', [CartController::class, 'update'])->name('cart.update')->middleware(['auth', 'csrf']);
 Router::post('/cart/{id}/remove', [CartController::class, 'remove'])->name('cart.remove')->middleware(['auth', 'csrf']);
+Router::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply')->middleware(['auth', 'csrf']);
+Router::post('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove')->middleware(['auth', 'csrf']);
 
 Router::get('/checkout', [CheckoutController::class, 'show'])->name('checkout')->middleware('auth');
 Router::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware(['auth', 'csrf']);
@@ -138,6 +140,11 @@ Router::post('/admin/payment-proofs/{id}/reject', [AdminController::class, 'reje
 Router::get('/admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews')->middleware(['auth', 'admin']);
 Router::post('/admin/reviews/{id}/approve', [AdminController::class, 'approveReview'])->name('admin.review.approve')->middleware(['auth', 'admin', 'csrf']);
 Router::post('/admin/reviews/{id}/reject', [AdminController::class, 'rejectReview'])->name('admin.review.reject')->middleware(['auth', 'admin', 'csrf']);
+
+Router::get('/admin/coupons', [AdminController::class, 'coupons'])->name('admin.coupons')->middleware(['auth', 'admin']);
+Router::post('/admin/coupons', [AdminController::class, 'storeCoupon'])->name('admin.coupon.store')->middleware(['auth', 'admin', 'csrf']);
+Router::post('/admin/coupons/{id}', [AdminController::class, 'updateCoupon'])->name('admin.coupon.update')->middleware(['auth', 'admin', 'csrf']);
+Router::post('/admin/coupons/{id}/delete', [AdminController::class, 'deleteCoupon'])->name('admin.coupon.delete')->middleware(['auth', 'admin', 'csrf']);
 
 Router::get('/admin/categories', [AdminController::class, 'categories'])->name('admin.categories')->middleware(['auth', 'admin']);
 Router::post('/admin/categories', [AdminController::class, 'storeCategory'])->name('admin.category.store')->middleware(['auth', 'admin', 'csrf']);

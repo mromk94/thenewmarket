@@ -16,7 +16,8 @@ class CartController
     {
         $userId = (int) Session::get('user_id');
         $items = CartService::items($userId);
-        $summary = CartService::summary($items);
+        $coupon = $this->getCoupon();
+        $summary = CartService::summary($items, $coupon);
 
         if (Request::input('format', '') === 'json') {
             Response::json(['items' => $items, 'summary' => $summary]);
@@ -26,6 +27,19 @@ class CartController
             'items' => $items,
             'summary' => $summary,
         ]);
+    }
+
+    private function getCoupon(): ?array
+    {
+        $code = Session::get('coupon_code');
+        if (empty($code)) {
+            return null;
+        }
+        $coupon = \App\Models\Coupon::findByCode($code);
+        if (!$coupon || !(int) $coupon['is_active']) {
+            return null;
+        }
+        return $coupon;
     }
 
     public function add(): void
@@ -96,6 +110,33 @@ class CartController
         }
 
         Session::flash('success', 'Item removed.');
+        Response::redirect('/cart');
+    }
+
+    public function applyCoupon(): void
+    {
+        $code = strtoupper(trim(Request::input('coupon_code', '')));
+        if (empty($code)) {
+            Session::flash('error', 'Please enter a coupon code.');
+            Response::redirect('/cart');
+        }
+
+        $coupon = \App\Models\Coupon::findByCode($code);
+        if (!$coupon || !(int) $coupon['is_active']) {
+            Session::flash('error', 'Invalid coupon code.');
+            Session::remove('coupon_code');
+            Response::redirect('/cart');
+        }
+
+        Session::set('coupon_code', $code);
+        Session::flash('success', 'Coupon applied: ' . e($code));
+        Response::redirect('/cart');
+    }
+
+    public function removeCoupon(): void
+    {
+        Session::remove('coupon_code');
+        Session::flash('success', 'Coupon removed.');
         Response::redirect('/cart');
     }
 }

@@ -21,7 +21,8 @@ class CheckoutController
     {
         $userId = (int) Session::get('user_id');
         $items = CartService::items($userId);
-        $summary = CartService::summary($items);
+        $coupon = $this->getCoupon();
+        $summary = CartService::summary($items, $coupon);
 
         if (empty($items)) {
             Response::redirect('/cart');
@@ -34,10 +35,24 @@ class CheckoutController
         ]);
     }
 
+    private function getCoupon(): ?array
+    {
+        $code = Session::get('coupon_code');
+        if (empty($code)) {
+            return null;
+        }
+        $coupon = \App\Models\Coupon::findByCode($code);
+        if (!$coupon || !(int) $coupon['is_active']) {
+            return null;
+        }
+        return $coupon;
+    }
+
     public function store(): void
     {
         $userId = (int) Session::get('user_id');
         $items = CartService::items($userId);
+        $coupon = $this->getCoupon();
 
         if (empty($items)) {
             Response::redirect('/cart');
@@ -46,8 +61,9 @@ class CheckoutController
         $paymentMethodId = (int) Request::input('payment_method_id', 0);
 
         try {
-            $order = OrderService::create($userId, $items);
+            $order = OrderService::create($userId, $items, $coupon);
             CartService::clear($userId);
+            Session::remove('coupon_code');
 
             if ($paymentMethodId === 0) {
                 $result = PaymentService::initiate((int) $order['id']);

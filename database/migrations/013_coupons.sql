@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS coupons (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(50) NOT NULL,
+    type ENUM('percentage','fixed') DEFAULT 'percentage',
+    value DECIMAL(15,4) NOT NULL DEFAULT 0,
+    min_order DECIMAL(15,4) DEFAULT 0,
+    max_uses INT UNSIGNED DEFAULT NULL,
+    uses INT UNSIGNED DEFAULT 0,
+    valid_from DATE DEFAULT NULL,
+    valid_to DATE DEFAULT NULL,
+    is_active TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_code (code)
+);

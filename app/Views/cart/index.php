@@ -60,6 +60,20 @@
                 </table>
             </div>
 
+            <div style="display:flex; gap:0.5rem; align-items:stretch; flex-wrap:wrap; margin-top:1.5rem;">
+                <form action="<?= url('/cart/coupon') ?>" method="POST" style="display:flex; gap:0.5rem; flex-wrap:wrap; flex:1;">
+                    <?= csrf_field() ?>
+                    <input type="text" name="coupon_code" class="form-control" placeholder="Coupon code" value="<?= e($summary['coupon_code'] ?? '') ?>" style="min-width:140px; flex:1;">
+                    <button type="submit" class="btn btn-outline">Apply</button>
+                </form>
+                <?php if (!empty($summary['coupon_code'])): ?>
+                    <form action="<?= url('/cart/coupon/remove') ?>" method="POST" style="display:inline;">
+                        <?= csrf_field() ?>
+                        <button type="submit" class="btn btn-outline" style="color:#dc2626; border-color:#dc2626;">Remove coupon</button>
+                    </form>
+                <?php endif; ?>
+            </div>
+
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:1.5rem;">
                 <span style="color:var(--muted);">Subtotal</span>
                 <span style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format($summary['subtotal'], 2) ?></span>

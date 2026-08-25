@@ -10,6 +10,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\DepositMethod;
 use App\Models\Notification;
 use App\Models\PaymentMethod;
@@ -1106,5 +1107,80 @@ class AdminController
         Review::setStatus((int) $id, 'rejected');
         Session::flash('success', 'Review rejected.');
         Response::redirect('/admin/reviews');
+    }
+
+    public function coupons(): string
+    {
+        return Response::view('admin/coupons', [
+            'coupons' => Coupon::all(),
+        ]);
+    }
+
+    public function storeCoupon(): void
+    {
+        $code = strtoupper(trim(Request::input('code', '')));
+        $type = Request::input('type', 'percentage');
+        $value = (float) Request::input('value', 0);
+        $minOrder = Request::input('min_order', '') !== '' ? (float) Request::input('min_order') : 0;
+        $maxUses = Request::input('max_uses', '') !== '' ? (int) Request::input('max_uses') : null;
+        $validFrom = Request::input('valid_from', '') !== '' ? Request::input('valid_from') : null;
+        $validTo = Request::input('valid_to', '') !== '' ? Request::input('valid_to') : null;
+
+        if (empty($code) || $value <= 0) {
+            Session::flash('error', 'Code and a positive value are required.');
+            Response::redirect('/admin/coupons');
+        }
+
+        try {
+            Coupon::create([
+                'code' => $code,
+                'type' => in_array($type, ['percentage', 'fixed'], true) ? $type : 'percentage',
+                'value' => $value,
+                'min_order' => $minOrder,
+                'max_uses' => $maxUses,
+                'valid_from' => $validFrom,
+                'valid_to' => $validTo,
+                'is_active' => (int) Request::input('is_active', 1),
+            ]);
+            Session::flash('success', 'Coupon created.');
+        } catch (\Throwable $e) {
+            Session::flash('error', 'Could not create coupon. Code may already exist.');
+        }
+
+        Response::redirect('/admin/coupons');
+    }
+
+    public function updateCoupon(string $id): void
+    {
+        if (!Coupon::findById((int) $id)) {
+            throw new HttpException('Coupon not found.', 404);
+        }
+
+        $type = Request::input('type', 'percentage');
+        $value = (float) Request::input('value', 0);
+        if ($value <= 0) {
+            Session::flash('error', 'A positive value is required.');
+            Response::redirect('/admin/coupons');
+        }
+
+        Coupon::update((int) $id, [
+            'type' => in_array($type, ['percentage', 'fixed'], true) ? $type : 'percentage',
+            'value' => $value,
+            'min_order' => Request::input('min_order', '') !== '' ? (float) Request::input('min_order') : 0,
+            'max_uses' => Request::input('max_uses', '') !== '' ? (int) Request::input('max_uses') : null,
+            'valid_from' => Request::input('valid_from', '') !== '' ? Request::input('valid_from') : null,
+            'valid_to' => Request::input('valid_to', '') !== '' ? Request::input('valid_to') : null,
+            'is_active' => (int) Request::input('is_active', 1),
+        ]);
+
+        Session::flash('success', 'Coupon updated.');
+        Response::redirect('/admin/coupons');
+    }
+
+    public function deleteCoupon(string $id): void
+    {
+        Coupon::delete((int) $id);
+        Session::flash('success', 'Coupon deleted.');
+        Response::redirect('/admin/coupons');
     }
 }

@@ -79,6 +79,11 @@
             <p style="color:var(--muted);">Approve customer product reviews.</p>
             <a href="<?= url('/admin/reviews') ?>" class="btn btn-outline">View reviews</a>
         </div>
+        <div class="glass-card">
+            <h3>Coupons</h3>
+            <p style="color:var(--muted);">Create and manage discount codes.</p>
+            <a href="<?= url('/admin/coupons') ?>" class="btn btn-outline">View coupons</a>
+        </div>
     </div>
 </section>
 

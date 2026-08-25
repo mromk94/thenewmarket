@@ -161,7 +161,7 @@ class CartService
         return $total;
     }
 
-    public static function summary(array $items): array
+    public static function summary(array $items, ?array $coupon = null): array
     {
         $subtotal = self::total($items);
 
@@ -172,13 +172,21 @@ class CartService
 
         $shipping = ($freeThreshold > 0 && $subtotal >= $freeThreshold) ? 0.0 : $shippingRate;
         $tax = $subtotal * ($taxRate / 100);
-        $discount = $subtotal * ($discountPercent / 100);
+        $baseDiscount = $subtotal * ($discountPercent / 100);
+
+        $couponDiscount = 0.0;
+        if ($coupon) {
+            $couponDiscount = \App\Models\Coupon::calculateDiscount($coupon, $subtotal - $baseDiscount);
+        }
+
+        $discount = $baseDiscount + $couponDiscount;
 
         return [
             'subtotal' => $subtotal,
             'shipping' => $shipping,
             'tax' => $tax,
             'discount' => $discount,
+            'coupon_code' => $coupon['code'] ?? null,
             'total' => $subtotal + $shipping + $tax - $discount,
         ];
     }
