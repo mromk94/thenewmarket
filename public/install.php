@@ -17,29 +17,8 @@ function envExists(): bool {
 }
 
 function isInstalled(): bool {
-    global $lockPath, $basePath;
-    if (is_file($lockPath)) {
-        return true;
-    }
-    if (!envExists()) {
-        return false;
-    }
-    $env = parseEnv();
-    if (empty($env['DB_DATABASE']) || empty($env['DB_HOST'])) {
-        return false;
-    }
-    try {
-        $pdo = new PDO(
-            "mysql:host={$env['DB_HOST']};port={$env['DB_PORT']};dbname={$env['DB_DATABASE']};charset=utf8mb4",
-            $env['DB_USERNAME'],
-            $env['DB_PASSWORD'],
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-        );
-        $stmt = $pdo->query("SELECT id FROM users LIMIT 1");
-        return (bool) $stmt->fetch();
-    } catch (Throwable $e) {
-        return false;
-    }
+    global $lockPath;
+    return is_file($lockPath);
 }
 
 function parseEnv(): array {
@@ -139,21 +118,32 @@ function isBaseMigration(string $file): bool {
     return (bool) preg_match('/^001_/', basename($file));
 }
 
-function createAdmin(PDO $pdo, array $data): void {
+function createAdmin(PDO $pdo, array $data): int {
     $hash = password_hash($data['admin_password'], PASSWORD_DEFAULT);
     $role = $pdo->prepare("SELECT id FROM roles WHERE name = 'admin' LIMIT 1");
     $role->execute();
     $roleId = (int) $role->fetchColumn();
 
-    $stmt = $pdo->prepare("INSERT INTO users (role_id, email, password_hash, status, email_verified_at, created_at) VALUES (?, ?, ?, 'active', NOW(), NOW())");
-    $stmt->execute([$roleId, $data['admin_email'], $hash]);
-    $userId = (int) $pdo->lastInsertId();
+    $existing = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+    $existing->execute([$data['admin_email']]);
+    $existingId = $existing->fetchColumn();
 
-    $profile = $pdo->prepare("INSERT INTO user_profiles (user_id, first_name, last_name, phone) VALUES (?, 'Admin', 'User', '')");
-    $profile->execute([$userId]);
+    if ($existingId) {
+        $userId = (int) $existingId;
+        $stmt = $pdo->prepare("UPDATE users SET role_id = ?, password_hash = ?, status = 'active' WHERE id = ?");
+        $stmt->execute([$roleId, $hash, $userId]);
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO users (role_id, email, password_hash, status, email_verified_at, created_at) VALUES (?, ?, ?, 'active', NOW(), NOW())");
+        $stmt->execute([$roleId, $data['admin_email'], $hash]);
+        $userId = (int) $pdo->lastInsertId();
+    }
 
-    $wallet = $pdo->prepare("INSERT INTO wallets (user_id, balance, currency) VALUES (?, 0.0000, ?)");
-    $wallet->execute([$userId, $data['app_currency']]);
+    $pdo->prepare("INSERT IGNORE INTO user_profiles (user_id, first_name, last_name, phone) VALUES (?, 'Admin', 'User', '')")
+        ->execute([$userId]);
+    $pdo->prepare("INSERT IGNORE INTO wallets (user_id, balance, currency) VALUES (?, 0.0000, ?)")
+        ->execute([$userId, $data['app_currency']]);
+
+    return $userId;
 }
 
 function seedSettings(PDO $pdo, array $data): void {
@@ -225,7 +215,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === '2') {
             $errors[] = 'Database connection failed: ' . $dbError;
         } else {
             try {
-                writeEnv($data);
                 $pdo = pdo($data);
 
                 $files = migrationFiles();
@@ -236,6 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === '2') {
                 createAdmin($pdo, $data);
                 runSqlFiles($pdo, $seedFiles);
                 seedSettings($pdo, $data);
+                writeEnv($data);
                 file_put_contents($lockPath, date('Y-m-d H:i:s'));
                 $success = true;
             } catch (Throwable $e) {
