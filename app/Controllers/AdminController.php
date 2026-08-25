@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\HttpException;
+use App\Core\Logger;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
@@ -66,17 +67,46 @@ class AdminController
         $productId = (int) $id;
         $action = Request::input('action');
 
-        match ($action) {
-            'approve' => Product::setStatus($productId, 'approved'),
-            'publish' => Product::setStatus($productId, 'published'),
-            'reject' => Product::setStatus($productId, 'rejected'),
-            'suspend' => Product::setStatus($productId, 'suspended'),
-            'feature' => Product::setFeatured($productId, true),
-            'unfeature' => Product::setFeatured($productId, false),
-            'hide' => Product::setVisibility($productId, 'hidden'),
-            'show' => Product::setVisibility($productId, 'public'),
-            default => throw new HttpException('Unknown action.', 400),
-        };
+        switch ($action) {
+            case 'approve':
+            case 'publish':
+                Product::setStatus($productId, $action === 'approve' ? 'approved' : 'published');
+                $product = Product::findById($productId);
+                if ($product) {
+                    $vendor = Vendor::findById((int) $product['vendor_id']);
+                    $user = $vendor ? Database::first("SELECT email FROM users WHERE id = :id", ['id' => $vendor['user_id']]) : null;
+                    if ($user) {
+                        try {
+                            Mailer::sendTemplate('vendor_product_approved', $user['email'], [
+                                'product_name' => $product['name'],
+                            ]);
+                        } catch (\Throwable $e) {
+                            Logger::error('Product approved email failed: ' . $e->getMessage());
+                        }
+                    }
+                }
+                break;
+            case 'reject':
+                Product::setStatus($productId, 'rejected');
+                break;
+            case 'suspend':
+                Product::setStatus($productId, 'suspended');
+                break;
+            case 'feature':
+                Product::setFeatured($productId, true);
+                break;
+            case 'unfeature':
+                Product::setFeatured($productId, false);
+                break;
+            case 'hide':
+                Product::setVisibility($productId, 'hidden');
+                break;
+            case 'show':
+                Product::setVisibility($productId, 'public');
+                break;
+            default:
+                throw new HttpException('Unknown action.', 400);
+        }
 
         Session::flash('success', 'Product updated.');
         Response::redirect('/admin/products');
@@ -95,12 +125,30 @@ class AdminController
         $action = Request::input('action');
         $reason = trim(Request::input('rejection_reason', ''));
 
-        match ($action) {
-            'approve' => Vendor::setStatus($vendorId, 'approved'),
-            'reject' => Vendor::setStatus($vendorId, 'rejected', $reason),
-            'suspend' => Vendor::setStatus($vendorId, 'suspended', $reason),
-            default => throw new HttpException('Unknown action.', 400),
-        };
+        switch ($action) {
+            case 'approve':
+                Vendor::setStatus($vendorId, 'approved');
+                $vendor = Vendor::findById($vendorId);
+                $user = $vendor ? Database::first("SELECT email FROM users WHERE id = :id", ['id' => $vendor['user_id']]) : null;
+                if ($user) {
+                    try {
+                        Mailer::sendTemplate('vendor_approved', $user['email'], [
+                            'business_name' => $vendor['business_name'] ?? 'your business',
+                        ]);
+                    } catch (\Throwable $e) {
+                        Logger::error('Vendor approved email failed: ' . $e->getMessage());
+                    }
+                }
+                break;
+            case 'reject':
+                Vendor::setStatus($vendorId, 'rejected', $reason);
+                break;
+            case 'suspend':
+                Vendor::setStatus($vendorId, 'suspended', $reason);
+                break;
+            default:
+                throw new HttpException('Unknown action.', 400);
+        }
 
         Session::flash('success', 'Vendor updated.');
         Response::redirect('/admin/vendors');
@@ -674,6 +722,18 @@ class AdminController
         WalletService::debit((int) $withdrawal['user_id'], (float) $withdrawal['amount'], 'debit', 'vendor_withdrawal', (int) $id, 'Manual withdrawal approved');
         Withdrawal::setStatus((int) $id, 'approved', trim(Request::input('admin_note', '')));
 
+        $user = Database::first("SELECT email FROM users WHERE id = :id", ['id' => (int) $withdrawal['user_id']]);
+        if ($user) {
+            try {
+                Mailer::sendTemplate('vendor_withdrawal_approved', $user['email'], [
+                    'currency_symbol' => (string) config('app.currency_symbol'),
+                    'amount' => number_format((float) $withdrawal['amount'], 2),
+                ]);
+            } catch (\Throwable $e) {
+                Logger::error('Withdrawal approved email failed: ' . $e->getMessage());
+            }
+        }
+
         Session::flash('success', 'Withdrawal approved and wallet debited.');
         Response::redirect('/admin/withdrawals');
     }
@@ -843,6 +903,19 @@ class AdminController
 
         WalletService::credit((int) $refund['customer_id'], (float) $refund['amount'], 'credit', 'refund', (int) $id, 'Refund approved for order ' . $refund['order_number']);
         Refund::setStatus((int) $id, 'approved', trim(Request::input('admin_note', '')));
+
+        $user = Database::first("SELECT email FROM users WHERE id = :id", ['id' => (int) $refund['customer_id']]);
+        if ($user) {
+            try {
+                Mailer::sendTemplate('customer_refund_approved', $user['email'], [
+                    'order_number' => $refund['order_number'],
+                    'currency_symbol' => (string) config('app.currency_symbol'),
+                    'amount' => number_format((float) $refund['amount'], 2),
+                ]);
+            } catch (\Throwable $e) {
+                Logger::error('Refund approved email failed: ' . $e->getMessage());
+            }
+        }
 
         Session::flash('success', 'Refund approved and customer wallet credited.');
         Response::redirect('/admin/refunds');

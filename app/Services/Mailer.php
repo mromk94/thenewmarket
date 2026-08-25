@@ -7,10 +7,34 @@ namespace App\Services;
 use App\Core\Database;
 use App\Core\HttpException;
 use App\Core\Logger;
+use App\Models\EmailTemplate;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer
 {
+    public static function sendTemplate(string $key, string $to, array $vars = []): void
+    {
+        $template = EmailTemplate::findByKey($key);
+        if (!$template) {
+            Logger::error("Email template not found: {$key}");
+            return;
+        }
+
+        $subject = self::replaceVars($template['subject'], $vars);
+        $body = self::replaceVars($template['body'], $vars);
+        $altBody = strip_tags($body);
+
+        self::send($to, $subject, $body, $altBody);
+    }
+
+    private static function replaceVars(string $text, array $vars): string
+    {
+        foreach ($vars as $key => $value) {
+            $text = str_replace('{{' . $key . '}}', (string) $value, $text);
+        }
+        return $text;
+    }
+
     public static function send(string $to, string $subject, string $body, string $altBody = ''): void
     {
         $mailer = (string) setting('mail', 'mailer', env('MAIL_MAILER', 'log'));

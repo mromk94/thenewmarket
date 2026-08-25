@@ -6,8 +6,10 @@ namespace App\Services;
 
 use App\Core\Database;
 use App\Core\HttpException;
+use App\Core\Logger;
 use App\Models\Product;
 use App\Services\CartService;
+use App\Services\Mailer;
 
 class OrderService
 {
@@ -127,7 +129,25 @@ class OrderService
 
             Database::commit();
 
-            return self::find($orderId);
+            $order = self::find($orderId);
+            $customer = Database::first("SELECT email FROM users WHERE id = :id", ['id' => $customerId]);
+            if ($customer) {
+                $appUrl = rtrim((string) config('app.url'), '/');
+                $orderUrl = $appUrl . '/account/orders/' . $orderId;
+                try {
+                    Mailer::sendTemplate('customer_order_placed', $customer['email'], [
+                        'order_number' => $orderNumber,
+                        'currency_symbol' => (string) config('app.currency_symbol'),
+                        'total' => number_format((float) $summary['total'], 2),
+                        'status' => 'Pending payment',
+                        'order_url' => $orderUrl,
+                    ]);
+                } catch (\Throwable $e) {
+                    Logger::error('Order placed email failed: ' . $e->getMessage());
+                }
+            }
+
+            return $order;
         } catch (\Throwable $e) {
             Database::rollBack();
             throw $e;
@@ -175,6 +195,22 @@ class OrderService
             }
 
             Database::commit();
+
+            $customer = Database::first("SELECT email FROM users WHERE id = :id", ['id' => $order['customer_id']]);
+            if ($customer) {
+                $appUrl = rtrim((string) config('app.url'), '/');
+                $orderUrl = $appUrl . '/account/orders/' . $orderId;
+                try {
+                    Mailer::sendTemplate('customer_order_paid', $customer['email'], [
+                        'order_number' => $order['order_number'],
+                        'currency_symbol' => (string) config('app.currency_symbol'),
+                        'total' => number_format((float) $order['total'], 2),
+                        'order_url' => $orderUrl,
+                    ]);
+                } catch (\Throwable $e) {
+                    Logger::error('Order paid email failed: ' . $e->getMessage());
+                }
+            }
         } catch (\Throwable $e) {
             Database::rollBack();
             throw $e;
