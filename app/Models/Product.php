@@ -229,7 +229,7 @@ class Product
         );
     }
 
-    public static function findNewest(int $limit = 6): array
+    public static function findNewest(int $limit = 6, int $offset = 0): array
     {
         return Database::select(
             "SELECT p.*, c.name as category_name, v.business_name as vendor_name,
@@ -240,7 +240,7 @@ class Product
              WHERE p.status = 'published'
                AND p.visibility = 'public'
              ORDER BY p.created_at DESC
-             LIMIT {$limit}",
+             LIMIT {$limit} OFFSET {$offset}",
             []
         );
     }

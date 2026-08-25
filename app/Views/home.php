@@ -95,18 +95,68 @@
 </section>
 <?php endif; ?>
 
+<?php
+    $categoryIcons = [
+        'electronics' => '⚡',
+        'smartphones' => '📱',
+        'laptops-computers' => '💻',
+        'audio' => '🎧',
+        'wearables' => '⌚',
+        'fashion' => '👕',
+        'men' => '👔',
+        'women' => '👗',
+        'home' => '🏠',
+        'furniture' => '🛋️',
+        'kitchen' => '🍳',
+        'beauty-health' => '💄',
+        'sports-outdoors' => '🏃',
+        'toys-games' => '🎲',
+        'automotive' => '🚗',
+    ];
+?>
+
 <section class="mt-4">
     <div class="section-header">
         <h2 class="section-title">Shop by Category</h2>
     </div>
     <div class="card-grid category-grid">
         <?php foreach ($categories as $c): ?>
-            <a href="<?= url('/shop?category=' . $c['slug']) ?>" class="glass-card category-card" style="text-align:center; display:flex; align-items:center; justify-content:center; min-height:110px;">
-                <h3 style="margin:0;"><?= e($c['name']) ?></h3>
+            <?php $icon = $categoryIcons[$c['slug']] ?? '🛍️'; ?>
+            <a href="<?= url('/shop?category=' . $c['slug']) ?>" class="glass-card category-card" style="text-align:center;">
+                <div class="category-icon"><?= $icon ?></div>
+                <h3 style="margin:0.5rem 0 0; font-size:1rem;"><?= e($c['name']) ?></h3>
+                <p style="margin:0; color:var(--muted); font-size:0.8rem;"><?= e($c['description'] ?: 'Explore products') ?></p>
             </a>
         <?php endforeach; ?>
     </div>
 </section>
+
+<?php if (!empty($justAdded)): ?>
+<section class="mt-4 just-added-section">
+    <div class="section-header">
+        <div>
+            <h2 class="section-title" style="font-size:1.25rem;">Just Added</h2>
+            <p style="color:var(--muted); margin:0; font-size:0.9rem;">The freshest drops right now</p>
+        </div>
+        <a href="<?= url('/shop') ?>" class="btn btn-outline" style="padding:0.4rem 0.9rem;">View all</a>
+    </div>
+    <div class="just-added-grid">
+        <?php foreach ($justAdded as $p): ?>
+            <a href="<?= url('/product/' . $p['slug']) ?>" class="glass-card just-added-card">
+                <div class="img-preview" style="height:140px;">
+                    <?= $p['thumbnail'] ? '<img src="' . e(asset($p['thumbnail'])) . '" alt="" loading="lazy">' : '<img class="placeholder-img" src="' . e(asset('images/placeholder-product.svg')) . '" alt="" loading="lazy">' ?>
+                    <span class="badge badge-affiliate" style="position:absolute; top:0.6rem; left:0.6rem;">New</span>
+                </div>
+                <div class="card-body" style="padding:0.75rem 0 0;">
+                    <h3 style="font-size:0.95rem; margin:0 0 0.15rem;"><?= e($p['name']) ?></h3>
+                    <p style="color:var(--muted); font-size:0.8rem; margin:0 0 0.35rem;"><?= e($p['category_name'] ?? '') ?></p>
+                    <span class="price" style="font-size:1rem;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $p['price'], 2) ?></span>
+                </div>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</section>
+<?php endif; ?>
 
 <?php if (!empty($newest)): ?>
 <section class="mt-4">
