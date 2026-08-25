@@ -88,7 +88,7 @@ class Router
 
     private static function runMiddleware(string $middleware): void
     {
-        $class = 'App\\Middleware\\' . $middleware;
+        $class = 'App\\Middleware\\' . ucfirst($middleware);
 
         if (!class_exists($class)) {
             throw new \RuntimeException("Middleware not found: {$middleware}");
