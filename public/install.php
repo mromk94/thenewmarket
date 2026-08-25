@@ -118,10 +118,14 @@ function pdo(array $data): PDO {
     );
 }
 
-function runMigrations(PDO $pdo): void {
+function migrationFiles(): array {
     global $basePath;
     $files = glob($basePath . '/database/migrations/*.sql');
     usort($files, 'strnatcmp');
+    return $files;
+}
+
+function runSqlFiles(PDO $pdo, array $files): void {
     foreach ($files as $file) {
         $sql = file_get_contents($file);
         if (!$sql) {
@@ -129,6 +133,10 @@ function runMigrations(PDO $pdo): void {
         }
         $pdo->exec($sql);
     }
+}
+
+function isBaseMigration(string $file): bool {
+    return (bool) preg_match('/^001_/', basename($file));
 }
 
 function createAdmin(PDO $pdo, array $data): void {
@@ -219,8 +227,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === '2') {
             try {
                 writeEnv($data);
                 $pdo = pdo($data);
-                runMigrations($pdo);
+
+                $files = migrationFiles();
+                $baseFiles = array_filter($files, 'isBaseMigration');
+                $seedFiles = array_filter($files, fn($f) => !isBaseMigration($f));
+
+                runSqlFiles($pdo, $baseFiles);
                 createAdmin($pdo, $data);
+                runSqlFiles($pdo, $seedFiles);
                 seedSettings($pdo, $data);
                 file_put_contents($lockPath, date('Y-m-d H:i:s'));
                 $success = true;

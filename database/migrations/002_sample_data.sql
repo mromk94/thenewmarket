@@ -6,7 +6,7 @@ ON DUPLICATE KEY UPDATE name = name;
 
 INSERT INTO products (owner_id, vendor_id, name, slug, description, short_description, sku, price, compare_at_price, stock_qty, inventory_status, category_id, is_affiliate_eligible, affiliate_commission_type, affiliate_commission_value, status, featured, visibility) VALUES
 (
-    (SELECT id FROM users WHERE email = 'admin@thenewage.local'),
+    1,
     NULL,
     'Premium Watch',
     'premium-watch',
@@ -29,7 +29,7 @@ ON DUPLICATE KEY UPDATE name = name;
 
 INSERT INTO products (owner_id, vendor_id, name, slug, description, short_description, sku, price, compare_at_price, stock_qty, inventory_status, category_id, is_affiliate_eligible, affiliate_commission_type, affiliate_commission_value, status, featured, visibility) VALUES
 (
-    (SELECT id FROM users WHERE email = 'admin@thenewage.local'),
+    1,
     NULL,
     'Premium Leather Bag',
     'premium-leather-bag',
@@ -52,7 +52,7 @@ ON DUPLICATE KEY UPDATE name = name;
 
 INSERT INTO products (owner_id, vendor_id, name, slug, description, short_description, sku, price, compare_at_price, stock_qty, inventory_status, category_id, is_affiliate_eligible, affiliate_commission_type, affiliate_commission_value, status, featured, visibility) VALUES
 (
-    (SELECT id FROM users WHERE email = 'admin@thenewage.local'),
+    1,
     NULL,
     'Wireless Headphones',
     'wireless-headphones',
@@ -75,7 +75,7 @@ ON DUPLICATE KEY UPDATE name = name;
 
 INSERT INTO products (owner_id, vendor_id, name, slug, description, short_description, sku, price, compare_at_price, stock_qty, inventory_status, category_id, is_affiliate_eligible, affiliate_commission_type, affiliate_commission_value, status, featured, visibility) VALUES
 (
-    (SELECT id FROM users WHERE email = 'vendor@thenewage.local'),
+    1,
     (SELECT id FROM vendors WHERE slug = 'demo-vendor'),
     'Handmade Scarf',
     'handmade-scarf',
@@ -100,8 +100,9 @@ INSERT INTO product_images (product_id, file_path, is_thumbnail, sort_order)
 SELECT id, '', 1, 1 FROM products;
 
 INSERT INTO vendor_affiliate_products (vendor_id, product_id)
-VALUES (
-    (SELECT id FROM vendors WHERE slug = 'demo-vendor'),
-    (SELECT id FROM products WHERE slug = 'premium-watch')
-)
-ON DUPLICATE KEY UPDATE vendor_id = vendor_id;
+SELECT v.id, p.id
+FROM (SELECT 1) AS dummy
+LEFT JOIN vendors v ON v.slug = 'demo-vendor'
+LEFT JOIN products p ON p.slug = 'premium-watch'
+WHERE v.id IS NOT NULL AND p.id IS NOT NULL
+ON DUPLICATE KEY UPDATE vendor_id = v.id;
