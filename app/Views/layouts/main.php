@@ -42,6 +42,6 @@
     <?php include BASE_PATH . '/app/Views/partials/mobile-nav.php'; ?>
     <script src="<?= asset('js/app.js') . '?v=3' ?>"></script>
     <script src="<?= asset('js/theme.js') . '?v=3' ?>"></script>
-    <script src="<?= asset('js/cart.js') ?>"></script>
+    <script src="<?= asset('js/cart.js') . '?v=3' ?>"></script>
 </body>
 </html>

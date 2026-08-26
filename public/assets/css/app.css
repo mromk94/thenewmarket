@@ -411,9 +411,6 @@ a:hover {
 }
 
 .footer .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     color: var(--muted);
     font-size: 0.9rem;
 }
@@ -1687,5 +1684,41 @@ a:hover {
 
     .footer-links {
         justify-content: center;
+    }
+}
+
+.theme-toggle-mobile { display: none; }
+
+@media (max-width: 768px) {
+    .theme-toggle-mobile {
+        display: flex;
+    }
+}
+
+.shop-filters-toggle {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .shop-filters-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 1rem;
+        border-radius: 0.5rem;
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .shop-filters {
+        display: none;
+        margin-top: 0.75rem;
+    }
+
+    .shop-filters.open {
+        display: block;
     }
 }

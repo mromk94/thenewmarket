@@ -1,6 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
     const html = document.documentElement;
     const toggles = document.querySelectorAll('[data-theme-toggle]');
+    const logos = document.querySelectorAll('img[data-logo]');
+
+    function updateLogos() {
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        logos.forEach(function (img) {
+            const target = isDark ? img.dataset.srcDark : img.dataset.srcLight;
+            if (target && img.src !== target) {
+                img.src = target;
+            }
+        });
+    }
 
     function updateToggles() {
         const isDark = html.getAttribute('data-theme') === 'dark';
@@ -22,8 +33,10 @@ document.addEventListener('DOMContentLoaded', function () {
             html.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
             updateToggles();
+            updateLogos();
         });
     });
 
     updateToggles();
+    updateLogos();
 });

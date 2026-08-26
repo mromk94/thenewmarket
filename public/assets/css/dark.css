@@ -243,10 +243,7 @@ html[data-theme="dark"] .product-stock-danger {
     color: #fca5a5;
 }
 
-html[data-theme="dark"] .brand img,
-html[data-theme="dark"] .footer-brand img {
-    filter: brightness(0) invert(1);
-}
+
 
 html[data-theme="dark"] .mobile-bottom-nav {
     background: linear-gradient(135deg, rgba(25, 25, 30, 0.98), rgba(15, 15, 20, 0.96));

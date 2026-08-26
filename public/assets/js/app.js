@@ -21,6 +21,16 @@
             });
         }
 
+        // Shop filters toggle (mobile)
+        const filterToggle = document.querySelector('[data-shop-filters-toggle]');
+        const filterPanel = document.getElementById('shop-filters');
+        if (filterToggle && filterPanel) {
+            filterToggle.addEventListener('click', function () {
+                const isOpen = filterPanel.classList.toggle('open');
+                filterToggle.textContent = isOpen ? 'Hide filters' : 'Show filters';
+            });
+        }
+
         // Auto-dismiss toast messages
         const toasts = document.querySelectorAll('.toast');
         toasts.forEach(function (toast) {

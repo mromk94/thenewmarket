@@ -1,11 +1,12 @@
 <nav class="navbar">
     <div class="container">
         <a class="brand" href="<?= url('/') ?>">
-            <img src="<?= e(setting('branding', 'logo_url', asset('images/logo.svg'))) ?>" alt="<?= e(setting('branding', 'site_name', config('app.name'))) ?>" style="height:32px; width:auto; display:block;">
+            <?php $lightLogo = e(setting('branding', 'logo_url', asset('images/logo.svg'))); ?>
+            <img data-logo src="<?= $lightLogo ?>" data-src-light="<?= $lightLogo ?>" data-src-dark="<?= e(setting('branding', 'logo_dark_url', asset('images/logo-dark.svg'))) ?>" alt="<?= e(setting('branding', 'site_name', config('app.name'))) ?>" style="height:32px; width:auto; display:block;">
         </a>
 
-        <button id="menu-toggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
-            <span></span><span></span><span></span>
+        <button type="button" class="theme-toggle theme-toggle-mobile" data-theme-toggle aria-label="Toggle dark mode" aria-pressed="false" style="width:2rem; height:2rem; background:transparent; border:none; cursor:pointer; color:var(--text); font-size:1.25rem; align-items:center; justify-content:center;">
+            <span class="theme-icon" aria-hidden="true">☾</span>
         </button>
 
         <ul class="nav-links">
@@ -46,28 +47,4 @@
         </ul>
     </div>
 
-    <div id="mobile-menu" class="mobile-menu" style="display:none;">
-        <div class="container" style="flex-direction:column; align-items:flex-start;">
-            <a href="<?= url('/shop') ?>">Shop</a>
-            <a href="<?= url('/vendors') ?>">Vendors</a>
-            <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode" aria-pressed="false" style="justify-content:flex-start; width:100%; border-radius:0.65rem; padding:0.85rem 1rem;">
-                <span class="theme-icon" aria-hidden="true">☾</span>
-                <span style="margin-left:0.5rem;">Theme</span>
-            </button>
-            <?php if ($user): ?>
-                <?php if ($user['role_name'] === 'admin'): ?><a href="<?= url('/admin') ?>">Admin</a><?php endif; ?>
-                <?php if ($user['role_name'] === 'vendor'): ?><a href="<?= url('/vendor/dashboard') ?>">Vendor</a><?php endif; ?>
-                <a href="<?= url('/account/notifications') ?>">Notifications<?= $unreadCount > 0 ? ' (' . $unreadCount . ')' : '' ?></a>
-                <a href="<?= url('/cart') ?>">Cart</a>
-                <a href="<?= url('/account') ?>">Account</a>
-                <form action="<?= url('/logout') ?>" method="POST" style="margin-top:0.5rem;">
-                    <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-outline">Logout</button>
-                </form>
-            <?php else: ?>
-                <a href="<?= url('/login') ?>">Sign in</a>
-                <a href="<?= url('/register') ?>" class="btn btn-primary" style="margin-top:0.5rem;">Register</a>
-            <?php endif; ?>
-        </div>
-    </div>
 </nav>
