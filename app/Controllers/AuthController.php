@@ -9,6 +9,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Services\AuthService;
+use App\Services\GuestCart;
 use App\Services\LoginProtection;
 
 class AuthController
@@ -26,6 +27,7 @@ class AuthController
         try {
             $user = AuthService::login($email, $password);
             AuthService::setUserSession($user);
+            GuestCart::migrateToUser((int) $user['id']);
             Response::redirect('/account');
         } catch (HttpException $e) {
             LoginProtection::record($email);
@@ -45,6 +47,7 @@ class AuthController
         try {
             $user = AuthService::register(Request::all());
             AuthService::setUserSession($user);
+            GuestCart::migrateToUser((int) $user['id']);
             Response::redirect('/account');
         } catch (HttpException $e) {
             Session::flash('error', $e->getMessage());

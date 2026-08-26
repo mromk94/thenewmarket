@@ -2,6 +2,8 @@
     $cartCount = 0;
     if (\App\Core\Session::has('user_id')) {
         $cartCount = \App\Services\CartService::count((int) \App\Core\Session::get('user_id'));
+    } else {
+        $cartCount = \App\Services\GuestCart::count();
     }
 ?>
 

@@ -24,11 +24,11 @@ Router::get('/product/{slug}', [ShopController::class, 'show'])->name('product')
 Router::post('/product/{slug}/review', [ShopController::class, 'storeReview'])->name('product.review')->middleware(['auth', 'csrf']);
 
 Router::get('/cart', [CartController::class, 'index'])->name('cart');
-Router::post('/cart/add', [CartController::class, 'add'])->name('cart.add')->middleware(['auth', 'csrf']);
-Router::post('/cart/{id}/update', [CartController::class, 'update'])->name('cart.update')->middleware(['auth', 'csrf']);
-Router::post('/cart/{id}/remove', [CartController::class, 'remove'])->name('cart.remove')->middleware(['auth', 'csrf']);
-Router::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply')->middleware(['auth', 'csrf']);
-Router::post('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove')->middleware(['auth', 'csrf']);
+Router::post('/cart/add', [CartController::class, 'add'])->name('cart.add')->middleware('csrf');
+Router::post('/cart/{id}/update', [CartController::class, 'update'])->name('cart.update')->middleware('csrf');
+Router::post('/cart/{id}/remove', [CartController::class, 'remove'])->name('cart.remove')->middleware('csrf');
+Router::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply')->middleware('csrf');
+Router::post('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove')->middleware('csrf');
 
 Router::get('/checkout', [CheckoutController::class, 'show'])->name('checkout')->middleware('auth');
 Router::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware(['auth', 'csrf']);

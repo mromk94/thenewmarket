@@ -9,6 +9,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Services\CartService;
+use App\Services\GuestCart;
 
 class CartController
 {
@@ -16,21 +17,18 @@ class CartController
     {
         $userId = (int) Session::get('user_id');
 
-        if (Request::input('format', '') === 'json') {
-            $items = $userId ? CartService::items($userId) : [];
-            $coupon = $userId ? $this->getCoupon() : null;
-            $summary = CartService::summary($items, $coupon);
-            Response::json(['items' => $items, 'summary' => $summary]);
+        if ($userId) {
+            $items = CartService::items($userId);
+        } else {
+            $items = GuestCart::items();
         }
 
-        if (!$userId) {
-            Session::flash('error', 'Please log in to view your cart.');
-            Response::redirect('/login');
-        }
-
-        $items = CartService::items($userId);
         $coupon = $this->getCoupon();
         $summary = CartService::summary($items, $coupon);
+
+        if (Request::input('format', '') === 'json') {
+            Response::json(['items' => $items, 'summary' => $summary]);
+        }
 
         return Response::view('cart/index', [
             'items' => $items,
@@ -63,7 +61,11 @@ class CartController
         $return = Request::input('return', '/cart');
 
         try {
-            CartService::add($userId, $productId, $quantity, $affiliateVendorId);
+            if ($userId) {
+                CartService::add($userId, $productId, $quantity, $affiliateVendorId);
+            } else {
+                GuestCart::add($productId, $quantity, $affiliateVendorId);
+            }
             $message = 'Added to cart.';
             $success = true;
         } catch (HttpException $e) {
@@ -90,7 +92,11 @@ class CartController
         $quantity = (int) Request::input('quantity', 1);
 
         try {
-            CartService::update((int) $id, $quantity, $userId);
+            if ($userId) {
+                CartService::update((int) $id, $quantity, $userId);
+            } else {
+                GuestCart::update((int) $id, $quantity);
+            }
             $message = 'Cart updated.';
             $success = true;
         } catch (HttpException $e) {
@@ -112,7 +118,12 @@ class CartController
     public function remove(string $id): void
     {
         $userId = (int) Session::get('user_id');
-        CartService::remove((int) $id, $userId);
+
+        if ($userId) {
+            CartService::remove((int) $id, $userId);
+        } else {
+            GuestCart::remove((int) $id);
+        }
 
         if (Request::header('X-Requested-With') === 'XMLHttpRequest' || Request::input('format', '') === 'json') {
             Response::json(['success' => true, 'message' => 'Item removed.']);
