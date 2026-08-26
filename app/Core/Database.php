@@ -60,7 +60,11 @@ class Database
 
     public static function first(string $sql, array $params = []): ?array
     {
-        $rows = self::select($sql . ' LIMIT 1', $params);
+        $sql = rtrim($sql, '; ');
+        if (!preg_match('/\sLIMIT\s+\d+(\s*,\s*\d+)?\s*$/i', $sql)) {
+            $sql .= ' LIMIT 1';
+        }
+        $rows = self::select($sql, $params);
         return $rows[0] ?? null;
     }
 

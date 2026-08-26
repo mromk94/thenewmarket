@@ -26,7 +26,7 @@ class Address
     public static function findDefault(int $userId, string $type): ?array
     {
         return Database::first(
-            "SELECT * FROM addresses WHERE user_id = :user_id AND type = :type ORDER BY is_default DESC, created_at DESC LIMIT 1",
+            "SELECT * FROM addresses WHERE user_id = :user_id AND type = :type ORDER BY is_default DESC, created_at DESC",
             ['user_id' => $userId, 'type' => $type]
         );
     }
