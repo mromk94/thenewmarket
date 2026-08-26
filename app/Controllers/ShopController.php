@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Core\Database;
 use App\Core\HttpException;
+use App\Core\Logger;
 use App\Core\Request;
 use App\Core\Response;
 use App\Models\Category;
@@ -125,26 +126,30 @@ class ShopController
         $reviewOrderId = 0;
         $customerId = (int) \App\Core\Session::get('user_id');
         if ($customerId > 0) {
-            $order = Database::first(
-                "SELECT o.id
-                 FROM orders o
-                 JOIN order_items oi ON oi.order_id = o.id
-                 WHERE o.customer_id = :customer_id
-                   AND o.payment_status = 'paid'
-                   AND oi.product_id = :product_id
-                   AND NOT EXISTS (
-                       SELECT 1 FROM reviews r
-                       WHERE r.customer_id = :customer_id
-                         AND r.product_id = :product_id
-                         AND r.order_id = o.id
-                   )
-                 ORDER BY o.created_at DESC
-                 LIMIT 1",
-                ['customer_id' => $customerId, 'product_id' => $product['id']]
-            );
-            if ($order) {
-                $canReview = true;
-                $reviewOrderId = (int) $order['id'];
+            try {
+                $order = Database::first(
+                    "SELECT o.id
+                     FROM orders o
+                     JOIN order_items oi ON oi.order_id = o.id
+                     WHERE o.customer_id = :customer_id
+                       AND o.payment_status = 'paid'
+                       AND oi.product_id = :product_id
+                       AND NOT EXISTS (
+                           SELECT 1 FROM reviews r
+                           WHERE r.customer_id = :customer_id
+                             AND r.product_id = :product_id
+                             AND r.order_id = o.id
+                       )
+                     ORDER BY o.created_at DESC
+                     LIMIT 1",
+                    ['customer_id' => $customerId, 'product_id' => $product['id']]
+                );
+                if ($order) {
+                    $canReview = true;
+                    $reviewOrderId = (int) $order['id'];
+                }
+            } catch (\Throwable $e) {
+                Logger::warning('Can-review query failed: ' . $e->getMessage());
             }
         }
 
