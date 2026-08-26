@@ -2,7 +2,7 @@
     <h1>My orders</h1>
 </section>
 
-<section class="glass-card mt-4" style="padding: 1.5rem; overflow-x: auto;">
+<section class="glass-card mt-4" style="padding: 1.5rem;">
     <?php if (empty($orders)): ?>
         <p class="text-center" style="color:var(--muted);">You have not placed any orders yet.</p>
     <?php else: ?>

@@ -5,7 +5,6 @@
 
 <form action="<?= url('/checkout') ?>" method="POST" class="card-grid mt-4 checkout-grid" id="checkout-form" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
     <?= csrf_field() ?>
-    <input type="hidden" id="payment_method_id" name="payment_method_id" value="0">
 
     <section class="glass-card" style="padding: 1.5rem;">
         <h2 class="mb-2">Order summary</h2>
@@ -70,22 +69,21 @@
     <section class="glass-card" style="padding: 1.5rem;">
         <h2 class="mb-2">Payment</h2>
 
-        <div class="payment-option active" data-method="0" style="border:2px solid var(--primary); padding:1rem; border-radius:0.75rem; margin-bottom:0.75rem; cursor:pointer; background:rgba(0,113,227,0.04);" onclick="selectMethod(this, 0)">
-            <strong>Test payment gateway</strong>
-            <p style="color:var(--muted); font-size:0.85rem; margin:0.25rem 0 0;">Simulate an instant card payment.</p>
-        </div>
+        <input type="hidden" id="payment_method_id" name="payment_method_id" value="<?= (int) ($paymentMethods[0]['id'] ?? 0) ?>">
 
         <?php if (!empty($paymentMethods)): ?>
-            <p style="color:var(--muted); font-size:0.85rem; margin:1rem 0 0.5rem;">Or pay manually:</p>
-            <?php foreach ($paymentMethods as $m): ?>
-                <div class="payment-option" data-method="<?= (int) $m['id'] ?>" style="border:1px solid var(--border); padding:1rem; border-radius:0.75rem; margin-bottom:0.75rem; cursor:pointer;" onclick="selectMethod(this, <?= (int) $m['id'] ?>)">
+            <?php foreach ($paymentMethods as $index => $m): ?>
+                <?php $isFirst = $index === 0; ?>
+                <div class="payment-option" data-method="<?= (int) $m['id'] ?>" style="border:<?= $isFirst ? '2px solid var(--primary)' : '1px solid var(--border)' ?>; padding:1rem; border-radius:0.75rem; margin-bottom:0.75rem; cursor:pointer; background:<?= $isFirst ? 'rgba(0,113,227,0.04)' : 'transparent' ?>;" onclick="selectMethod(this, <?= (int) $m['id'] ?>)">
                     <strong><?= e($m['name']) ?></strong>
                     <p style="color:var(--muted); font-size:0.85rem; margin:0.25rem 0 0;"><?= e($m['currency']) ?> · <?= e($m['type']) ?></p>
                 </div>
             <?php endforeach; ?>
+        <?php else: ?>
+            <p style="color:var(--muted);">No payment methods are configured right now.</p>
         <?php endif; ?>
 
-        <button type="submit" class="btn btn-primary w-full" style="margin-top:1rem;">Complete order</button>
+        <button type="submit" class="btn btn-primary w-full" style="margin-top:1rem;" <?= empty($paymentMethods) ? 'disabled' : '' ?>>Complete order</button>
     </section>
 </form>
 

@@ -6,8 +6,8 @@
     </p>
 </section>
 
-<section class="glass-card mt-4" style="padding: 1.5rem; overflow-x: auto;">
-    <table style="width:100%; min-width:560px; border-collapse:collapse; margin-bottom:1.5rem;">
+<section class="glass-card mt-4" style="padding: 1.5rem;">
+    <table style="width:100%; border-collapse:collapse; margin-bottom:1.5rem;">
         <thead>
             <tr style="text-align:left; color:var(--muted); border-bottom:1px solid var(--border);">
                 <th>Product</th>
@@ -18,7 +18,7 @@
         <tbody>
             <?php foreach ($items as $i): ?>
                 <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.5rem 0;"><?= e($i['product_name']) ?></td>
+                    <td style="padding:0.5rem 0; word-break:break-word;"><?= e($i['product_name']) ?></td>
                     <td><?= (int) $i['quantity'] ?></td>
                     <td style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $i['subtotal'], 2) ?></td>
                 </tr>
