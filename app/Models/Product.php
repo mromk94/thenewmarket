@@ -359,6 +359,7 @@ class Product
             'short_description' => $data['short_description'] ?? null,
             'sku' => $data['sku'] ?? null,
             'price' => $data['price'],
+            'delivery_rate' => $data['delivery_rate'] ?? null,
             'compare_at_price' => $data['compare_at_price'] ?? null,
             'sale_price' => $data['sale_price'] ?? null,
             'currency' => $data['currency'] ?? config('app.currency', 'USD'),
@@ -381,7 +382,7 @@ class Product
     public static function update(int $id, array $data): void
     {
         $allowed = [
-            'name', 'description', 'short_description', 'sku', 'price', 'compare_at_price',
+            'name', 'description', 'short_description', 'sku', 'price', 'delivery_rate', 'compare_at_price',
             'sale_price', 'currency', 'stock_qty', 'inventory_status', 'category_id',
             'is_affiliate_eligible', 'affiliate_commission_type', 'affiliate_commission_value',
             'affiliate_require_min_balance', 'affiliate_require_kyc', 'affiliate_require_min_sales',

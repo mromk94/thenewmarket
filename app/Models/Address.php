@@ -23,6 +23,14 @@ class Address
         return Database::select($sql, $params);
     }
 
+    public static function findById(int $id, int $userId): ?array
+    {
+        return Database::first(
+            "SELECT * FROM addresses WHERE id = :id AND user_id = :user_id",
+            ['id' => $id, 'user_id' => $userId]
+        );
+    }
+
     public static function findDefault(int $userId, string $type): ?array
     {
         return Database::first(

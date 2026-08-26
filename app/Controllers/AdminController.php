@@ -1371,4 +1371,43 @@ class AdminController
         Session::flash('success', 'Reply posted.');
         Response::redirect('/admin/tickets/' . $id);
     }
+
+    public function delivery(): string
+    {
+        $status = Request::input('status');
+        $where = '1=1';
+        $params = [];
+        if (in_array($status, ['pending', 'shipped', 'delivered', 'cancelled'], true)) {
+            $where = 'o.delivery_status = :status';
+            $params['status'] = $status;
+        }
+
+        $orders = Database::select(
+            "SELECT o.*, u.email FROM orders o JOIN users u ON u.id = o.customer_id WHERE {$where} ORDER BY o.created_at DESC",
+            $params
+        );
+
+        return Response::view('admin/delivery/index', [
+            'orders' => $orders,
+            'status' => $status,
+        ]);
+    }
+
+    public function updateDelivery(string $id): void
+    {
+        $data = [
+            'delivery_status' => Request::input('delivery_status'),
+            'delivery_stage' => Request::input('delivery_stage'),
+            'tracking_number' => trim(Request::input('tracking_number', '')),
+            'delivery_notes' => trim(Request::input('delivery_notes', '')),
+        ];
+        $data = array_filter($data, fn($v) => $v !== null);
+
+        if (!empty($data)) {
+            Database::update('orders', $data, 'id = ?', [(int) $id]);
+            Session::flash('success', 'Delivery updated.');
+        }
+
+        Response::redirect('/admin/delivery');
+    }
 }

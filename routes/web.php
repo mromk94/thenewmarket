@@ -176,6 +176,9 @@ Router::get('/admin/tickets', [AdminController::class, 'tickets'])->name('admin.
 Router::get('/admin/tickets/{id}', [AdminController::class, 'showTicket'])->name('admin.ticket.show')->middleware(['auth', 'admin']);
 Router::post('/admin/tickets/{id}/reply', [AdminController::class, 'replyTicket'])->name('admin.ticket.reply')->middleware(['auth', 'admin', 'csrf']);
 
+Router::get('/admin/delivery', [AdminController::class, 'delivery'])->name('admin.delivery')->middleware(['auth', 'admin']);
+Router::post('/admin/delivery/{id}/update', [AdminController::class, 'updateDelivery'])->name('admin.delivery.update')->middleware(['auth', 'admin', 'csrf']);
+
 Router::get('/about', [PagesController::class, 'about'])->name('about');
 Router::get('/contact', [PagesController::class, 'contact'])->name('contact');
 Router::get('/terms', [PagesController::class, 'terms'])->name('terms');

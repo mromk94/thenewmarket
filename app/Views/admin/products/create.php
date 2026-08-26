@@ -34,6 +34,10 @@
             <input type="number" step="0.01" min="0" id="price" name="price" class="form-control" required>
         </div>
         <div class="form-group" style="margin-bottom:0;">
+            <label for="delivery_rate">Delivery rate</label>
+            <input type="number" step="0.01" min="0" id="delivery_rate" name="delivery_rate" class="form-control">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
             <label for="compare_at_price">Compare-at price</label>
             <input type="number" step="0.01" min="0" id="compare_at_price" name="compare_at_price" class="form-control">
         </div>

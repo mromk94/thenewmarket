@@ -17,7 +17,10 @@ class OrderService
     public static function find(int $orderId): ?array
     {
         return Database::first(
-            "SELECT * FROM orders WHERE id = :id",
+            "SELECT o.*, a.first_name, a.last_name, a.address_line_1, a.address_line_2, a.city, a.state, a.country, a.zip
+             FROM orders o
+             LEFT JOIN addresses a ON a.id = o.shipping_address_id
+             WHERE o.id = :id",
             ['id' => $orderId]
         );
     }
@@ -38,7 +41,7 @@ class OrderService
         );
     }
 
-    public static function create(int $customerId, array $cartItems, ?array $coupon = null): array
+    public static function create(int $customerId, array $cartItems, ?array $coupon = null, int $shippingAddressId = 0): array
     {
         if (empty($cartItems)) {
             throw new HttpException('Your cart is empty.', 422);
@@ -49,7 +52,7 @@ class OrderService
 
         Database::beginTransaction();
         try {
-            $orderId = Database::insert('orders', [
+            $orderData = [
                 'order_number' => $orderNumber,
                 'customer_id' => $customerId,
                 'subtotal' => 0,
@@ -60,7 +63,13 @@ class OrderService
                 'currency' => $currency,
                 'status' => 'pending_payment',
                 'payment_status' => 'pending',
-            ]);
+                'delivery_status' => 'pending',
+                'delivery_stage' => 'Order placed',
+            ];
+            if ($shippingAddressId > 0) {
+                $orderData['shipping_address_id'] = $shippingAddressId;
+            }
+            $orderId = Database::insert('orders', $orderData);
 
             $subtotal = 0.0;
 

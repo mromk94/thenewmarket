@@ -8,6 +8,7 @@ use App\Core\HttpException;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
+use App\Models\Address;
 use App\Models\PaymentMethod;
 use App\Models\PaymentProof;
 use App\Services\CartService;
@@ -32,6 +33,7 @@ class CheckoutController
             'items' => $items,
             'summary' => $summary,
             'paymentMethods' => PaymentMethod::allActive(),
+            'addresses' => Address::forUser($userId, 'shipping'),
         ]);
     }
 
@@ -59,9 +61,15 @@ class CheckoutController
         }
 
         $paymentMethodId = (int) Request::input('payment_method_id', 0);
+        $shippingAddressId = (int) Request::input('shipping_address_id', 0);
+
+        if ($shippingAddressId > 0 && !Address::findById($shippingAddressId, $userId)) {
+            Session::flash('error', 'Please select a valid delivery address.');
+            Response::redirect('/checkout');
+        }
 
         try {
-            $order = OrderService::create($userId, $items, $coupon);
+            $order = OrderService::create($userId, $items, $coupon, $shippingAddressId);
             CartService::clear($userId);
             Session::remove('coupon_code');
 

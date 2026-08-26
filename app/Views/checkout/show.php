@@ -67,6 +67,25 @@
     </section>
 
     <section class="glass-card" style="padding: 1.5rem;">
+        <h2 class="mb-2">Delivery address</h2>
+
+        <?php if (empty($addresses)): ?>
+            <p style="color:var(--muted); margin-bottom:1rem;">You have no saved shipping address.</p>
+            <a href="<?= url('/account/addresses') ?>" class="btn btn-outline">Add address</a>
+        <?php else: ?>
+            <?php foreach ($addresses as $index => $a): ?>
+                <label style="display:block; border:1px solid var(--border); padding:1rem; border-radius:0.75rem; margin-bottom:0.75rem; cursor:pointer;">
+                    <input type="radio" name="shipping_address_id" value="<?= (int) $a['id'] ?>" style="margin-right:0.5rem;" <?= $index === 0 ? 'checked' : '' ?>>
+                    <strong><?= e($a['first_name']) ?> <?= e($a['last_name']) ?></strong>
+                    <p style="color:var(--muted); font-size:0.85rem; margin:0.25rem 0 0;">
+                        <?= e($a['address_line_1']) ?>, <?= e($a['city']) ?>, <?= e($a['country']) ?> <?= e($a['zip']) ?>
+                    </p>
+                </label>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </section>
+
+    <section class="glass-card" style="padding: 1.5rem;">
         <h2 class="mb-2">Payment</h2>
 
         <input type="hidden" id="payment_method_id" name="payment_method_id" value="<?= (int) ($paymentMethods[0]['id'] ?? 0) ?>">

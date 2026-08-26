@@ -109,6 +109,11 @@
             <a href="<?= url('/admin/tickets') ?>" class="btn btn-outline">View tickets</a>
         </div>
         <div class="glass-card">
+            <h3>Delivery</h3>
+            <p style="color:var(--muted);">Update order delivery status and tracking.</p>
+            <a href="<?= url('/admin/delivery') ?>" class="btn btn-outline">Manage delivery</a>
+        </div>
+        <div class="glass-card">
             <h3>Refunds</h3>
             <p style="color:var(--muted);">Review customer refund requests.</p>
             <a href="<?= url('/admin/refunds') ?>" class="btn btn-outline">View refunds</a>

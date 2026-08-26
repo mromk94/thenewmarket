@@ -26,10 +26,46 @@
         </tbody>
     </table>
 
-    <div style="display:flex; justify-content:space-between; font-size:1.25rem; font-weight:700; margin-bottom:1.5rem;">
-        <span>Total</span>
-        <span><?= e(config('app.currency_symbol')) ?><?= number_format((float) $order['total'], 2) ?></span>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-bottom:1.5rem;">
+        <span style="color:var(--muted);">Subtotal</span>
+        <span style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $order['subtotal'], 2) ?></span>
+        <span style="color:var(--muted);">Delivery</span>
+        <span style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $order['shipping'], 2) ?></span>
+        <?php if (!empty($order['tax']) && (float) $order['tax'] > 0): ?>
+            <span style="color:var(--muted);">Tax</span>
+            <span style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $order['tax'], 2) ?></span>
+        <?php endif; ?>
+        <span style="font-size:1.25rem; font-weight:700; padding-top:0.75rem; border-top:1px solid var(--border);">Total</span>
+        <span style="font-size:1.25rem; font-weight:700; text-align:right; padding-top:0.75rem; border-top:1px solid var(--border);"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $order['total'], 2) ?></span>
     </div>
+
+    <div style="margin-bottom:1.5rem;">
+        <h3 style="font-size:1rem; margin-bottom:0.5rem;">Delivery</h3>
+        <p style="margin:0.25rem 0 0; color:var(--muted); font-size:0.9rem;">
+            Status: <span style="text-transform:capitalize;"><?= e($order['delivery_status'] ?? 'pending') ?></span>
+            <?php if (!empty($order['delivery_stage'])): ?>
+                · Stage: <?= e($order['delivery_stage']) ?>
+            <?php endif; ?>
+            <?php if (!empty($order['tracking_number'])): ?>
+                · Tracking: <strong><?= e($order['tracking_number']) ?></strong>
+            <?php endif; ?>
+        </p>
+    </div>
+
+    <?php if (!empty($order['address_line_1'])): ?>
+        <div style="margin-bottom:1.5rem;">
+            <h3 style="font-size:1rem; margin-bottom:0.5rem;">Shipping address</h3>
+            <p style="margin:0; color:var(--muted); font-size:0.9rem;">
+                <?= e($order['first_name'] . ' ' . $order['last_name']) ?><br>
+                <?= e($order['address_line_1']) ?><br>
+                <?php if (!empty($order['address_line_2'])): ?>
+                    <?= e($order['address_line_2']) ?><br>
+                <?php endif; ?>
+                <?= e($order['city']) ?>, <?= e($order['state'] ?? '') ?> <?= e($order['zip']) ?><br>
+                <?= e($order['country']) ?>
+            </p>
+        </div>
+    <?php endif; ?>
 
     <?php
         $proof = \App\Models\PaymentProof::forOrder((int) $order['id']);

@@ -77,7 +77,7 @@ class CartService
 
         return Database::select(
             "SELECT ci.id as cart_item_id, ci.quantity, ci.unit_price, ci.affiliate_vendor_id,
-                    p.id as product_id, p.name, p.slug, p.stock_qty,
+                    p.id as product_id, p.name, p.slug, p.stock_qty, p.delivery_rate,
                     v.business_name as vendor_name,
                     av.business_name as affiliate_vendor_name,
                     (SELECT file_path FROM product_images WHERE product_id = p.id AND file_path != '' ORDER BY is_thumbnail DESC, sort_order LIMIT 1) as thumbnail
@@ -165,12 +165,21 @@ class CartService
     {
         $subtotal = self::total($items);
 
-        $shippingRate = (float) setting('commerce', 'shipping_rate', 0);
+        $defaultRate = (float) setting('commerce', 'shipping_rate', 0);
         $freeThreshold = (float) setting('commerce', 'free_shipping_threshold', 0);
         $taxRate = (float) setting('commerce', 'tax_rate', 0);
         $discountPercent = (float) setting('commerce', 'discount_percent', 0);
 
-        $shipping = ($freeThreshold > 0 && $subtotal >= $freeThreshold) ? 0.0 : $shippingRate;
+        if ($freeThreshold > 0 && $subtotal >= $freeThreshold) {
+            $shipping = 0.0;
+        } else {
+            $shipping = 0.0;
+            foreach ($items as $item) {
+                $rate = $item['delivery_rate'] !== null ? (float) $item['delivery_rate'] : $defaultRate;
+                $shipping += $rate * (int) $item['quantity'];
+            }
+        }
+
         $tax = $subtotal * ($taxRate / 100);
         $baseDiscount = $subtotal * ($discountPercent / 100);
 
