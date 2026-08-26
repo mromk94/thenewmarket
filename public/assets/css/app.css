@@ -1648,3 +1648,27 @@ a:hover {
     line-height: 1;
     border-radius: 0.5rem;
 }
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+
+    .footer-links {
+        justify-content: center;
+    }
+}

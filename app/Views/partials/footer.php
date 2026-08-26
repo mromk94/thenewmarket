@@ -1,6 +1,6 @@
 <footer class="footer">
     <div class="container">
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:2rem; margin-bottom:1.5rem;">
+        <div class="footer-grid">
             <div>
                 <div class="footer-brand">
                     <img src="<?= asset('images/favicon.svg') ?>" alt="" style="height:28px; width:auto;">
