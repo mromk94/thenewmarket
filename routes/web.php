@@ -23,7 +23,7 @@ Router::get('/shop', [ShopController::class, 'index'])->name('shop');
 Router::get('/product/{slug}', [ShopController::class, 'show'])->name('product');
 Router::post('/product/{slug}/review', [ShopController::class, 'storeReview'])->name('product.review')->middleware(['auth', 'csrf']);
 
-Router::get('/cart', [CartController::class, 'index'])->name('cart')->middleware('auth');
+Router::get('/cart', [CartController::class, 'index'])->name('cart');
 Router::post('/cart/add', [CartController::class, 'add'])->name('cart.add')->middleware(['auth', 'csrf']);
 Router::post('/cart/{id}/update', [CartController::class, 'update'])->name('cart.update')->middleware(['auth', 'csrf']);
 Router::post('/cart/{id}/remove', [CartController::class, 'remove'])->name('cart.remove')->middleware(['auth', 'csrf']);
@@ -64,6 +64,7 @@ Router::get('/account/orders', [AccountController::class, 'orders'])->name('acco
 Router::get('/account/orders/{id}', [AccountController::class, 'order'])->name('account.order')->middleware('auth');
 Router::get('/account/wallet', [AccountController::class, 'wallet'])->name('account.wallet')->middleware('auth');
 
+Router::get('/vendor/pending', [VendorController::class, 'pending'])->name('vendor.pending')->middleware('auth');
 Router::get('/vendor/dashboard', [VendorController::class, 'dashboard'])->name('vendor.dashboard')->middleware(['auth', 'vendor']);
 Router::get('/vendor/affiliates', [VendorController::class, 'affiliates'])->name('vendor.affiliates')->middleware(['auth', 'vendor']);
 Router::post('/vendor/affiliates/{productId}/add', [VendorController::class, 'addAffiliate'])->name('vendor.affiliate.add')->middleware(['auth', 'vendor', 'csrf']);

@@ -423,4 +423,9 @@ class VendorController
             'totals' => $totals,
         ]);
     }
+
+    public function pending(): string
+    {
+        return Response::view('vendor/pending');
+    }
 }

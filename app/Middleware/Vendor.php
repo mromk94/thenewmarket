@@ -6,6 +6,7 @@ namespace App\Middleware;
 
 use App\Core\HttpException;
 use App\Core\Middleware;
+use App\Core\Response;
 use App\Core\Session;
 
 class Vendor extends Middleware
@@ -18,7 +19,7 @@ class Vendor extends Middleware
         }
 
         if (($user['vendor_status'] ?? '') !== 'approved') {
-            throw new HttpException('Your vendor account is not approved yet.', 403);
+            Response::redirect('/vendor/pending');
         }
     }
 }

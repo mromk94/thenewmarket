@@ -15,13 +15,22 @@ class CartController
     public function index(): string
     {
         $userId = (int) Session::get('user_id');
+
+        if (Request::input('format', '') === 'json') {
+            $items = $userId ? CartService::items($userId) : [];
+            $coupon = $userId ? $this->getCoupon() : null;
+            $summary = CartService::summary($items, $coupon);
+            Response::json(['items' => $items, 'summary' => $summary]);
+        }
+
+        if (!$userId) {
+            Session::flash('error', 'Please log in to view your cart.');
+            Response::redirect('/login');
+        }
+
         $items = CartService::items($userId);
         $coupon = $this->getCoupon();
         $summary = CartService::summary($items, $coupon);
-
-        if (Request::input('format', '') === 'json') {
-            Response::json(['items' => $items, 'summary' => $summary]);
-        }
 
         return Response::view('cart/index', [
             'items' => $items,

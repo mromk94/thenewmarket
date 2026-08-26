@@ -27,6 +27,9 @@ class AccountController
         }
 
         if ($user['role_name'] === 'vendor') {
+            if (($user['vendor_status'] ?? '') !== 'approved') {
+                Response::redirect('/vendor/pending');
+            }
             Response::redirect('/vendor/dashboard');
         }
 
