@@ -5,6 +5,7 @@
     } else {
         $cartCount = \App\Services\GuestCart::count();
     }
+    $loggedIn = \App\Core\Session::has('user_id');
 ?>
 
 <a href="#" class="cart-float" id="cart-float" data-cart-toggle aria-label="Open cart">
@@ -19,7 +20,7 @@
 <div class="cart-drawer" id="cart-drawer" data-cart-drawer style="display:none;">
     <div class="cart-drawer-backdrop" data-cart-close></div>
     <div class="cart-drawer-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border);">
+        <div class="cart-drawer-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border);">
             <h2 style="margin:0; font-size:1.25rem;">Your cart</h2>
             <button type="button" class="cart-drawer-close" data-cart-close aria-label="Close cart">&times;</button>
         </div>
@@ -28,7 +29,11 @@
         </div>
         <div class="cart-drawer-footer" style="margin-top:auto; padding-top:1rem; border-top:1px solid var(--border);">
             <a href="<?= url('/cart') ?>" class="btn btn-outline w-full" style="margin-bottom:0.5rem;">View full cart</a>
-            <a href="<?= url('/checkout') ?>" class="btn btn-primary w-full">Checkout</a>
+            <?php if ($loggedIn): ?>
+                <a href="<?= url('/checkout') ?>" class="btn btn-primary w-full">Checkout</a>
+            <?php else: ?>
+                <a href="<?= url('/checkout') ?>" class="btn btn-primary w-full">Sign in to checkout</a>
+            <?php endif; ?>
         </div>
     </div>
 </div>

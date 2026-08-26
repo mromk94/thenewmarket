@@ -95,7 +95,11 @@
 
             <div style="text-align:right; margin-top:1.5rem;">
                 <a href="<?= url('/shop') ?>" class="btn btn-outline" style="margin-right:0.5rem;">Keep shopping</a>
-                <a href="<?= url('/checkout') ?>" class="btn btn-primary">Continue to checkout</a>
+                <?php if (\App\Core\Session::has('user_id')): ?>
+                    <a href="<?= url('/checkout') ?>" class="btn btn-primary">Continue to checkout</a>
+                <?php else: ?>
+                    <a href="<?= url('/checkout') ?>" class="btn btn-primary">Sign in to checkout</a>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     </div>

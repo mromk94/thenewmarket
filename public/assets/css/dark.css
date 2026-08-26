@@ -242,3 +242,76 @@ html[data-theme="dark"] .product-stock-danger {
     background: rgba(248, 113, 113, 0.12);
     color: #fca5a5;
 }
+
+html[data-theme="dark"] .brand img,
+html[data-theme="dark"] .footer-brand img {
+    filter: brightness(0) invert(1);
+}
+
+html[data-theme="dark"] .mobile-bottom-nav {
+    background: linear-gradient(135deg, rgba(25, 25, 30, 0.98), rgba(15, 15, 20, 0.96));
+    border-top-color: rgba(255, 255, 255, 0.10);
+}
+
+html[data-theme="dark"] .mobile-bottom-nav a,
+html[data-theme="dark"] .mobile-bottom-nav button {
+    color: var(--muted);
+}
+
+html[data-theme="dark"] .mobile-bottom-nav a[aria-current="page"],
+html[data-theme="dark"] .mobile-bottom-nav a:hover,
+html[data-theme="dark"] .mobile-bottom-nav a.active,
+html[data-theme="dark"] .mobile-bottom-nav button:hover,
+html[data-theme="dark"] .mobile-bottom-nav button.active {
+    color: var(--primary);
+}
+
+html[data-theme="dark"] .mobile-bottom-nav .cart-count {
+    border-color: var(--bg);
+}
+
+html[data-theme="dark"] .cart-drawer-panel {
+    background: linear-gradient(180deg, rgba(35, 35, 40, 0.98), rgba(20, 20, 25, 0.96));
+    border-top-color: rgba(255, 255, 255, 0.10);
+}
+
+html[data-theme="dark"] .cart-drawer-close {
+    color: var(--muted);
+}
+
+html[data-theme="dark"] .cart-drawer-item {
+    border-bottom-color: var(--border);
+}
+
+html[data-theme="dark"] .cart-drawer-backdrop {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="dark"] .navbar {
+    background: linear-gradient(135deg, rgba(30, 30, 35, 0.98), rgba(20, 20, 25, 0.96));
+}
+
+html[data-theme="dark"] .menu-toggle {
+    background: var(--surface);
+    border-color: var(--border);
+}
+
+html[data-theme="dark"] .menu-toggle span {
+    background: var(--text);
+}
+
+html[data-theme="dark"] .mobile-menu {
+    background: var(--surface-solid);
+}
+
+html[data-theme="dark"] .mobile-menu a,
+html[data-theme="dark"] .mobile-menu button {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+}
+
+html[data-theme="dark"] .mobile-menu a:hover,
+html[data-theme="dark"] .mobile-menu button:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: var(--primary);
+}

@@ -39,6 +39,7 @@
 
     <?php include BASE_PATH . '/app/Views/partials/cart-float.php'; ?>
     <?php include BASE_PATH . '/app/Views/partials/footer.php'; ?>
+    <?php include BASE_PATH . '/app/Views/partials/mobile-nav.php'; ?>
     <script src="<?= asset('js/app.js') ?>"></script>
     <script src="<?= asset('js/theme.js') ?>"></script>
     <script src="<?= asset('js/cart.js') ?>"></script>

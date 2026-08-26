@@ -28,7 +28,9 @@ class AuthController
             $user = AuthService::login($email, $password);
             AuthService::setUserSession($user);
             GuestCart::migrateToUser((int) $user['id']);
-            Response::redirect('/account');
+            $returnTo = Session::get('return_after_login');
+            Session::remove('return_after_login');
+            Response::redirect($returnTo ?: '/account');
         } catch (HttpException $e) {
             LoginProtection::record($email);
             Session::flash('error', $e->getMessage());
@@ -48,7 +50,9 @@ class AuthController
             $user = AuthService::register(Request::all());
             AuthService::setUserSession($user);
             GuestCart::migrateToUser((int) $user['id']);
-            Response::redirect('/account');
+            $returnTo = Session::get('return_after_login');
+            Session::remove('return_after_login');
+            Response::redirect($returnTo ?: '/account');
         } catch (HttpException $e) {
             Session::flash('error', $e->getMessage());
             Session::setOld(Request::all());

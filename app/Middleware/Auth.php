@@ -19,6 +19,12 @@ class Auth extends Middleware
                 Response::json(['success' => false, 'message' => 'Please log in to continue.'], 403);
             }
 
+            if (Request::method() === 'GET') {
+                Session::set('return_after_login', Request::uri());
+                Session::flash('error', 'Please log in to continue.');
+                Response::redirect('/login');
+            }
+
             throw new HttpException('Please log in to continue.', 403);
         }
     }
