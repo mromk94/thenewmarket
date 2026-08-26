@@ -3,8 +3,7 @@
         <div class="footer-grid">
             <div>
                 <div class="footer-brand">
-                    <?php $footerLightLogo = e(setting('branding', 'logo_url', asset('images/logo.svg'))); ?>
-                    <img data-logo src="<?= $footerLightLogo ?>" data-src-light="<?= $footerLightLogo ?>" data-src-dark="<?= e(setting('branding', 'logo_dark_url', asset('images/logo-dark.svg'))) ?>" alt="" style="height:28px; width:auto;">
+                    <img src="<?= e(setting('branding', 'favicon_url', asset('images/favicon.svg'))) ?>" alt="" style="height:32px; width:32px;">
                     <?= e(config('app.name')) ?>
                 </div>
                 <p class="footer-tagline">Discover products from trusted vendors and affiliates in one marketplace.</p>

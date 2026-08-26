@@ -4,7 +4,7 @@
 </section>
 
 <section class="glass-card mt-4" style="padding: 1rem;">
-    <button type="button" class="shop-filters-toggle" data-shop-filters-toggle>Show filters</button>
+    <button type="button" class="btn btn-outline shop-filters-toggle" data-shop-filters-toggle>Show filters</button>
     <div class="shop-filters" id="shop-filters">
     <form method="GET" action="<?= url('/shop') ?>" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
         <input class="form-control" type="text" name="search" placeholder="Search products..." value="<?= e($search) ?>" style="max-width:260px;">

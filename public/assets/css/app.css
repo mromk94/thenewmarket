@@ -1701,16 +1701,9 @@ a:hover {
 
 @media (max-width: 768px) {
     .shop-filters-toggle {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.6rem 1rem;
-        border-radius: 0.5rem;
-        background: var(--surface);
-        color: var(--text);
-        border: 1px solid var(--border);
-        font-weight: 500;
-        cursor: pointer;
+        display: flex;
+        width: 100%;
+        justify-content: center;
     }
 
     .shop-filters {
@@ -1720,5 +1713,29 @@ a:hover {
 
     .shop-filters.open {
         display: block;
+    }
+
+    .shop-filters.open form {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.75rem;
+    }
+
+    .shop-filters.open .form-control,
+    .shop-filters.open .btn {
+        width: 100% !important;
+        max-width: none !important;
+        flex: 1 1 auto !important;
+    }
+
+    .shop-filters.open form > div {
+        width: 100% !important;
+        min-width: auto !important;
+        flex: 1 1 auto !important;
+    }
+
+    .shop-filters.open form > div .form-control {
+        max-width: none !important;
     }
 }

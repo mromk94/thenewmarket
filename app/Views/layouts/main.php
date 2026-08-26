@@ -17,8 +17,8 @@
             document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
-    <link rel="stylesheet" href="<?= asset('css/app.css') . '?v=3' ?>">
-    <link rel="stylesheet" href="<?= asset('css/dark.css') . '?v=3' ?>">
+    <link rel="stylesheet" href="<?= asset('css/app.css') . '?v=4' ?>">
+    <link rel="stylesheet" href="<?= asset('css/dark.css') . '?v=4' ?>">
 </head>
 <body>
     <?php include BASE_PATH . '/app/Views/partials/nav.php'; ?>
@@ -40,8 +40,8 @@
     <?php include BASE_PATH . '/app/Views/partials/cart-float.php'; ?>
     <?php include BASE_PATH . '/app/Views/partials/footer.php'; ?>
     <?php include BASE_PATH . '/app/Views/partials/mobile-nav.php'; ?>
-    <script src="<?= asset('js/app.js') . '?v=3' ?>"></script>
-    <script src="<?= asset('js/theme.js') . '?v=3' ?>"></script>
-    <script src="<?= asset('js/cart.js') . '?v=3' ?>"></script>
+    <script src="<?= asset('js/app.js') . '?v=4' ?>"></script>
+    <script src="<?= asset('js/theme.js') . '?v=4' ?>"></script>
+    <script src="<?= asset('js/cart.js') . '?v=4' ?>"></script>
 </body>
 </html>
