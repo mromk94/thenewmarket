@@ -9,7 +9,16 @@
     <script>window.currencySymbol = '<?= e(config('app.currency_symbol')) ?>';</script>
     <link rel="icon" type="image/svg+xml" href="<?= e(setting('branding', 'favicon_url', asset('images/favicon.svg'))) ?>">
     <link rel="apple-touch-icon" href="<?= e(setting('branding', 'icon_url', asset('images/icon.svg'))) ?>">
+    <script>
+        (function () {
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved || (prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
+    <link rel="stylesheet" href="<?= asset('css/dark.css') ?>">
 </head>
 <body>
     <?php include BASE_PATH . '/app/Views/partials/nav.php'; ?>
@@ -31,6 +40,7 @@
     <?php include BASE_PATH . '/app/Views/partials/cart-float.php'; ?>
     <?php include BASE_PATH . '/app/Views/partials/footer.php'; ?>
     <script src="<?= asset('js/app.js') ?>"></script>
+    <script src="<?= asset('js/theme.js') ?>"></script>
     <script src="<?= asset('js/cart.js') ?>"></script>
 </body>
 </html>

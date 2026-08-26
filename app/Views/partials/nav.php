@@ -11,6 +11,11 @@
         <ul class="nav-links">
             <li><a href="<?= url('/shop') ?>">Shop</a></li>
             <li><a href="<?= url('/vendors') ?>">Vendors</a></li>
+            <li>
+                <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode" aria-pressed="false" style="width:2rem;height:2rem;">
+                    <span class="theme-icon" aria-hidden="true">☾</span>
+                </button>
+            </li>
 
             <?php $user = session('user'); ?>
             <?php if ($user): ?>
@@ -45,6 +50,10 @@
         <div class="container" style="flex-direction:column; align-items:flex-start;">
             <a href="<?= url('/shop') ?>">Shop</a>
             <a href="<?= url('/vendors') ?>">Vendors</a>
+            <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode" aria-pressed="false" style="justify-content:flex-start; width:100%; border-radius:0.65rem; padding:0.85rem 1rem;">
+                <span class="theme-icon" aria-hidden="true">☾</span>
+                <span style="margin-left:0.5rem;">Theme</span>
+            </button>
             <?php if ($user): ?>
                 <?php if ($user['role_name'] === 'admin'): ?><a href="<?= url('/admin') ?>">Admin</a><?php endif; ?>
                 <?php if ($user['role_name'] === 'vendor'): ?><a href="<?= url('/vendor/dashboard') ?>">Vendor</a><?php endif; ?>
