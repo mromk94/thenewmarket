@@ -87,7 +87,7 @@ a:hover {
 .navbar {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1010;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.92));
     -webkit-backdrop-filter: blur(24px);
     backdrop-filter: blur(24px);
@@ -327,7 +327,7 @@ a:hover {
     position: fixed;
     top: 1rem;
     right: 1rem;
-    z-index: 1000;
+    z-index: 1030;
     max-width: 360px;
     padding: 1rem 1.25rem;
     border-radius: 0.75rem;
@@ -1246,7 +1246,7 @@ a:hover {
 .cart-drawer {
     position: fixed;
     inset: 0;
-    z-index: 1002;
+    z-index: 1020;
 }
 
 .cart-drawer-backdrop {
@@ -1508,7 +1508,8 @@ a:hover {
 .mobile-bottom-nav .cart-count {
     position: absolute;
     top: 2px;
-    right: 10px;
+    left: 50%;
+    margin-left: 6px;
     min-width: 18px;
     height: 18px;
     padding: 0 4px;
@@ -1611,19 +1612,21 @@ a:hover {
 
     .mobile-menu {
         position: fixed;
-        top: 0;
+        top: 64px;
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: 999;
+        z-index: 1002;
         padding: 0;
         background: var(--surface-solid);
+        border: none;
+        border-radius: 0;
         display: none;
         overflow-y: auto;
     }
 
     .mobile-menu .container {
-        padding: 5rem 1.5rem 2rem;
+        padding: 1.5rem;
         gap: 1rem;
     }
 
@@ -1638,6 +1641,20 @@ a:hover {
     .mobile-menu a:hover,
     .mobile-menu button:hover {
         background: var(--bg);
+    }
+
+    .mobile-menu .btn-primary,
+    .mobile-menu .btn-primary:hover {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+    }
+
+    .mobile-menu .btn-outline,
+    .mobile-menu .btn-outline:hover {
+        background: transparent;
+        color: var(--primary);
+        border-color: var(--primary);
     }
 }
 

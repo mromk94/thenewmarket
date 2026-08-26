@@ -315,3 +315,17 @@ html[data-theme="dark"] .mobile-menu button:hover {
     background: rgba(255, 255, 255, 0.10);
     color: var(--primary);
 }
+
+html[data-theme="dark"] .mobile-menu .btn-primary,
+html[data-theme="dark"] .mobile-menu .btn-primary:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+html[data-theme="dark"] .mobile-menu .btn-outline,
+html[data-theme="dark"] .mobile-menu .btn-outline:hover {
+    background: transparent;
+    color: var(--primary);
+    border-color: var(--primary);
+}
