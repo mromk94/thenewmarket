@@ -34,18 +34,25 @@ class VendorController
     {
         $vendor = self::currentVendor();
         $products = Product::findByOwner((int) $vendor['user_id']);
+        $userId = (int) $vendor['user_id'];
 
         $stats = [
             'products' => count($products),
             'published' => count(array_filter($products, fn($p) => $p['status'] === 'published')),
             'pending' => count(array_filter($products, fn($p) => $p['status'] === 'pending')),
-            'balance' => WalletService::balance((int) $vendor['user_id']),
+            'balance' => WalletService::balance($userId),
+            'sales' => Vendor::salesCount((int) $vendor['id']),
+            'revenue' => Vendor::revenue((int) $vendor['id']),
+            'orders' => Vendor::ordersCount((int) $vendor['id']),
         ];
+
+        $transactions = array_slice(WalletService::transactions($userId), 0, 5);
 
         return Response::view('vendor/dashboard', [
             'vendor' => $vendor,
             'stats' => $stats,
-            'products' => $products,
+            'products' => array_slice($products, 0, 6),
+            'transactions' => $transactions,
         ]);
     }
 

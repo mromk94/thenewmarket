@@ -1,34 +1,41 @@
-<section class="hero" style="padding: 2rem 0;">
-    <h1>Money history</h1>
-    <p style="font-size:1.5rem; font-weight:700;">Balance: <?= e(config('app.currency_symbol')) ?><?= number_format($balance, 2) ?></p>
-    <a href="<?= url('/vendor/deposits') ?>" class="btn btn-primary mt-2">Add funds</a>
+<section class="vendor-header">
+    <div class="vendor-header-info">
+        <div>
+            <h1>Wallet</h1>
+            <p>Track your earnings, deposits and withdrawals.</p>
+        </div>
+    </div>
+    <a href="<?= url('/vendor/deposits') ?>" class="btn btn-primary">+ Add funds</a>
 </section>
 
-<section class="glass-card mt-4" style="padding: 1.5rem;">
+<section class="vendor-balance glass-card">
+    <div class="vendor-balance-info">
+        <p class="vendor-balance-label">Available balance</p>
+        <h2 class="vendor-balance-amount"><?= e(config('app.currency_symbol')) ?><?= number_format($balance, 2) ?></h2>
+    </div>
+    <div class="vendor-balance-actions">
+        <a href="<?= url('/vendor/withdrawals') ?>" class="btn btn-outline">Withdraw</a>
+    </div>
+</section>
+
+<section class="glass-card" style="padding:1.5rem; margin-top:1.5rem;">
+    <h3 class="vendor-recent-title" style="margin-bottom:1rem;">Transaction history</h3>
     <?php if (empty($transactions)): ?>
         <p style="color:var(--muted);">No transactions yet.</p>
     <?php else: ?>
-        <table style="width:100%; border-collapse:collapse;">
-            <thead>
-                <tr style="text-align:left; color:var(--muted); border-bottom:1px solid var(--border);">
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th style="text-align:right;">Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($transactions as $tx): ?>
-                    <tr style="border-bottom:1px solid var(--border);">
-                        <td style="padding:0.5rem 0;"><?= e($tx['created_at']) ?></td>
-                        <td><?= e($tx['type']) ?></td>
-                        <td><?= e($tx['description']) ?></td>
-                        <td style="text-align:right; color:<?= $tx['direction'] === 'in' ? '#4ade80' : '#f87171' ?>;">
-                            <?= $tx['direction'] === 'in' ? '+' : '-' ?><?= e(config('app.currency_symbol')) ?><?= number_format((float) $tx['amount'], 2) ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <div class="vendor-tx-list">
+            <?php foreach ($transactions as $tx): ?>
+                <div class="vendor-tx-item">
+                    <div class="vendor-tx-main">
+                        <p class="vendor-tx-type"><?= e($tx['type']) ?></p>
+                        <p class="vendor-tx-desc"><?= e($tx['description']) ?></p>
+                        <p class="vendor-tx-date"><?= e($tx['created_at']) ?></p>
+                    </div>
+                    <p class="vendor-tx-amount <?= $tx['direction'] === 'in' ? 'vendor-tx-in' : 'vendor-tx-out' ?>">
+                        <?= $tx['direction'] === 'in' ? '+' : '-' ?><?= e(config('app.currency_symbol')) ?><?= number_format((float) $tx['amount'], 2) ?>
+                    </p>
+                </div>
+            <?php endforeach; ?>
+        </div>
     <?php endif; ?>
 </section>

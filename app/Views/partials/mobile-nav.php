@@ -29,9 +29,13 @@
             </button>
         </li>
         <li>
-            <a href="<?= url($user ? '/account' : '/login') ?>" <?= in_array($currentPath, ['/account', '/login']) ? 'aria-current="page"' : '' ?>>
+            <?php
+                $accountUrl = $user ? ($user['role_name'] === 'vendor' ? '/vendor/dashboard' : '/account') : '/login';
+                $accountLabel = $user ? ($user['role_name'] === 'vendor' ? 'Dashboard' : 'Account') : 'Sign in';
+            ?>
+            <a href="<?= url($accountUrl) ?>" <?= in_array($currentPath, ['/account', '/login', '/vendor/dashboard']) ? 'aria-current="page"' : '' ?>>
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <?= $user ? 'Account' : 'Sign in' ?>
+                <?= e($accountLabel) ?>
             </a>
         </li>
     </ul>

@@ -96,4 +96,40 @@ class Vendor
         );
         return (int) ($row['c'] ?? 0);
     }
+
+    public static function revenue(int $vendorId): float
+    {
+        $vendor = self::findById($vendorId);
+        if (!$vendor) {
+            return 0.0;
+        }
+
+        $row = Database::first(
+            "SELECT COALESCE(SUM(oi.subtotal), 0) as r
+             FROM order_items oi
+             JOIN orders o ON o.id = oi.order_id
+             WHERE (oi.affiliate_vendor_id = :vendor_id OR oi.product_owner_id = :owner_id)
+               AND o.payment_status = 'paid'",
+            ['vendor_id' => $vendorId, 'owner_id' => (int) $vendor['user_id']]
+        );
+        return (float) ($row['r'] ?? 0);
+    }
+
+    public static function ordersCount(int $vendorId): int
+    {
+        $vendor = self::findById($vendorId);
+        if (!$vendor) {
+            return 0;
+        }
+
+        $row = Database::first(
+            "SELECT COUNT(DISTINCT o.id) as c
+             FROM order_items oi
+             JOIN orders o ON o.id = oi.order_id
+             WHERE (oi.affiliate_vendor_id = :vendor_id OR oi.product_owner_id = :owner_id)
+               AND o.payment_status = 'paid'",
+            ['vendor_id' => $vendorId, 'owner_id' => (int) $vendor['user_id']]
+        );
+        return (int) ($row['c'] ?? 0);
+    }
 }

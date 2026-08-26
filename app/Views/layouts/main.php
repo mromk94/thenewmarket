@@ -17,8 +17,8 @@
             document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
-    <link rel="stylesheet" href="<?= asset('css/app.css') . '?v=4' ?>">
-    <link rel="stylesheet" href="<?= asset('css/dark.css') . '?v=4' ?>">
+    <link rel="stylesheet" href="<?= asset('css/app.css') . '?v=5' ?>">
+    <link rel="stylesheet" href="<?= asset('css/dark.css') . '?v=5' ?>">
 </head>
 <body>
     <?php include BASE_PATH . '/app/Views/partials/nav.php'; ?>

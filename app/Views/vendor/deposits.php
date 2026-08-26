@@ -1,28 +1,36 @@
 <?php $title = 'Add Funds'; ?>
 
-<section class="hero" style="padding: 2rem 0;">
-    <h1>Add Funds</h1>
-    <p>Top up your vendor wallet manually. Requests are reviewed by an admin.</p>
+<section class="vendor-header">
+    <div class="vendor-header-info">
+        <div>
+            <h1>Add Funds</h1>
+            <p>Top up your wallet. Requests are reviewed by an admin.</p>
+        </div>
+    </div>
+    <a href="<?= url('/vendor/wallet') ?>" class="btn btn-outline">Wallet</a>
 </section>
 
-<section class="card-grid mt-4">
-    <div class="glass-card" style="padding:1.5rem;">
-        <h3 style="margin:0;"><?= e(config('app.currency_symbol')) ?><?= number_format($balance, 2) ?></h3>
-        <p style="color:var(--muted); margin:0.25rem 0 0;">Current wallet balance</p>
+<section class="vendor-balance glass-card">
+    <div class="vendor-balance-info">
+        <p class="vendor-balance-label">Current wallet balance</p>
+        <h2 class="vendor-balance-amount"><?= e(config('app.currency_symbol')) ?><?= number_format($balance, 2) ?></h2>
     </div>
 </section>
 
-<section class="glass-card mt-4" style="padding: 1.5rem;">
-    <h2 class="mb-2">Choose a method</h2>
+<section class="glass-card mt-4" style="padding:1.5rem;">
+    <h3 class="vendor-recent-title" style="margin-bottom:1rem;">Choose a method</h3>
     <?php if (empty($methods)): ?>
         <p style="color:var(--muted);">No top-up methods are available right now.</p>
     <?php else: ?>
-        <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+        <div class="vendor-method-grid">
             <?php foreach ($methods as $m): ?>
-                <div class="glass-card" style="padding:1rem;">
-                    <h4><?= e($m['name']) ?></h4>
-                    <p style="color:var(--muted); font-size:0.9rem;"><?= e($m['currency']) ?> · <?= e(ucfirst($m['type'])) ?></p>
-                    <p style="color:var(--muted); font-size:0.85rem;"><?= e($m['instructions'] ?: 'Select this method to see transfer details.') ?></p>
+                <div class="vendor-method-card glass-card">
+                    <div class="vendor-method-head">
+                        <span class="vendor-method-name"><?= e($m['name']) ?></span>
+                        <span class="vendor-method-type"><?= e(ucfirst($m['type'])) ?></span>
+                    </div>
+                    <p class="vendor-method-currency"><?= e($m['currency']) ?></p>
+                    <p class="vendor-method-instructions"><?= e($m['instructions'] ?: 'Select this method to see transfer details.') ?></p>
                     <button type="button" class="btn btn-primary" style="width:100%;" onclick="openDepositModal(<?= (int) $m['id'] ?>)">Use this method</button>
                 </div>
             <?php endforeach; ?>
@@ -30,37 +38,29 @@
     <?php endif; ?>
 </section>
 
-<section class="glass-card mt-4" style="padding: 1.5rem;">
-    <h2 class="mb-2">Your top-up requests</h2>
+<section class="glass-card mt-4" style="padding:1.5rem;">
+    <h3 class="vendor-recent-title" style="margin-bottom:1rem;">Your top-up requests</h3>
     <?php if (empty($deposits)): ?>
         <p style="color:var(--muted);">You have not submitted any top-up requests yet.</p>
     <?php else: ?>
-        <table style="width:100%; border-collapse:collapse;">
-            <thead>
-                <tr style="text-align:left; color:var(--muted); border-bottom:1px solid var(--border);">
-                    <th style="padding:0.75rem 0;">Method</th>
-                    <th>Amount</th>
-                    <th>Reference</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($deposits as $d): ?>
-                    <tr style="border-bottom:1px solid var(--border);">
-                        <td style="padding:0.5rem 0;"><?= e($d['method_name']) ?></td>
-                        <td><?= e(config('app.currency_symbol')) ?><?= number_format((float) $d['amount'], 2) ?> <?= e($d['currency']) ?></td>
-                        <td><?= e($d['reference'] ?: '—') ?></td>
-                        <td><span class="badge" style="text-transform:capitalize; background:<?= $d['status'] === 'approved' ? 'var(--success)' : ($d['status'] === 'rejected' ? '#dc2626' : '#f59e0b') ?>; color:#fff;"><?= e($d['status']) ?></span></td>
-                        <td><?= e($d['created_at']) ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <div class="vendor-tx-list">
+            <?php foreach ($deposits as $d): ?>
+                <div class="vendor-tx-item">
+                    <div class="vendor-tx-main">
+                        <p class="vendor-tx-type"><?= e($d['method_name']) ?></p>
+                        <p class="vendor-tx-desc">Ref: <?= e($d['reference'] ?: '—') ?> · <?= e($d['created_at']) ?></p>
+                    </div>
+                    <div class="vendor-tx-side">
+                        <p class="vendor-tx-amount" style="font-weight:700;">+<?= e(config('app.currency_symbol')) ?><?= number_format((float) $d['amount'], 2) ?> <?= e($d['currency']) ?></p>
+                        <span class="badge" style="text-transform:capitalize; background:<?= $d['status'] === 'approved' ? 'var(--success)' : ($d['status'] === 'rejected' ? '#dc2626' : '#f59e0b') ?>; color:#fff;"><?= e($d['status']) ?></span>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
     <?php endif; ?>
 </section>
 
-<div id="deposit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; padding:1rem;">
+<div id="deposit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1022; align-items:center; justify-content:center; padding:1rem;">
     <div class="glass-card" style="width:100%; max-width:520px; max-height:90vh; overflow:auto; padding:1.5rem; position:relative;">
         <button type="button" onclick="closeDepositModal()" style="position:absolute; top:1rem; right:1rem; background:transparent; border:none; font-size:1.25rem; cursor:pointer; color:var(--muted);">×</button>
         <h2 id="modal-title" class="mb-2">Top up</h2>
@@ -110,7 +110,7 @@ function openDepositModal(methodId) {
 
     if (method.type === 'crypto') {
         if (method.network) details += '<p style="margin:0 0 0.5rem;"><strong>Network:</strong> ' + method.network + '</p>';
-        if (method.wallet_address) details += '<div style="margin:0 0 0.5rem;"><strong>Wallet address:</strong><br><code style="word-break:break-all; background:#f3f4f6; padding:0.5rem; border-radius:0.35rem; display:block;">' + method.wallet_address + '</code></div>';
+        if (method.wallet_address) details += '<div style="margin:0 0 0.5rem;"><strong>Wallet address:</strong><br><code style="word-break:break-all; background:var(--surface); padding:0.5rem; border-radius:0.35rem; display:block;">' + method.wallet_address + '</code></div>';
         if (method.qr_image) details += '<img src="/assets/' + method.qr_image + '" alt="QR" style="max-width:160px; border-radius:0.5rem;">';
     } else {
         if (method.bank_name) details += '<p style="margin:0 0 0.5rem;"><strong>Bank:</strong> ' + method.bank_name + '</p>';
