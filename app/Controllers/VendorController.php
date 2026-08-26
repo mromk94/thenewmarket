@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Core\Database;
 use App\Core\HttpException;
+use App\Core\Logger;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
@@ -435,7 +436,14 @@ class VendorController
     public function support(): string
     {
         $vendor = self::currentVendor();
-        $tickets = Ticket::forVendor((int) $vendor['id']);
+
+        $tickets = [];
+        try {
+            $tickets = Ticket::forVendor((int) $vendor['id']);
+        } catch (\Throwable $e) {
+            Logger::warning('Vendor ticket list unavailable: ' . $e->getMessage());
+            Session::flash('error', 'Tickets are not available yet. Run the tickets migration.');
+        }
 
         return Response::view('vendor/support/index', [
             'vendor' => $vendor,

@@ -1311,11 +1311,21 @@ class AdminController
             $filters['priority'] = $priority;
         }
 
+        $tickets = [];
+        $openCount = 0;
+        try {
+            $tickets = Ticket::all($filters);
+            $openCount = Ticket::countOpen();
+        } catch (\Throwable $e) {
+            Logger::warning('Ticket admin list unavailable: ' . $e->getMessage());
+            Session::flash('error', 'Tickets are not available yet. Run the tickets migration.');
+        }
+
         return Response::view('admin/tickets/index', [
-            'tickets' => Ticket::all($filters),
+            'tickets' => $tickets,
             'status' => $status,
             'priority' => $priority,
-            'openCount' => Ticket::countOpen(),
+            'openCount' => $openCount,
         ]);
     }
 
