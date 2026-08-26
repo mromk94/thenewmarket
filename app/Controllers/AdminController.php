@@ -41,8 +41,14 @@ class AdminController
             'pending_vendors' => (int) (Database::first("SELECT COUNT(*) as c FROM vendors WHERE status = 'pending'", [])['c'] ?? 0),
             'pending_products' => (int) (Database::first("SELECT COUNT(*) as c FROM products WHERE status = 'pending'", [])['c'] ?? 0),
             'total_revenue' => (float) (Database::first("SELECT COALESCE(SUM(total), 0) as c FROM orders WHERE payment_status = 'paid'", [])['c'] ?? 0.0),
-            'open_tickets' => Ticket::countOpen(),
+            'open_tickets' => 0,
         ];
+
+        try {
+            $stats['open_tickets'] = Ticket::countOpen();
+        } catch (\Throwable $e) {
+            Logger::warning('Ticket count unavailable: ' . $e->getMessage());
+        }
 
         return Response::view('admin/dashboard', [
             'stats' => $stats,
