@@ -38,15 +38,18 @@ if (!function_exists('e')) {
 }
 
 if (!function_exists('url')) {
-    function url(string $path = ''): string
+    function url(?string $path = ''): string
     {
-        return rtrim((string) config('app.url'), '/') . '/' . ltrim($path, '/');
+        return rtrim((string) config('app.url'), '/') . '/' . ltrim((string) $path, '/');
     }
 }
 
 if (!function_exists('asset')) {
-    function asset(string $path): string
+    function asset(?string $path): string
     {
+        if ($path === null || $path === '') {
+            return '';
+        }
         return url('assets/' . ltrim($path, '/'));
     }
 }
