@@ -19,6 +19,7 @@ use App\Models\Product;
 use App\Models\Refund;
 use App\Models\Review;
 use App\Models\Setting;
+use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\VendorDeposit;
@@ -40,6 +41,7 @@ class AdminController
             'pending_vendors' => (int) (Database::first("SELECT COUNT(*) as c FROM vendors WHERE status = 'pending'", [])['c'] ?? 0),
             'pending_products' => (int) (Database::first("SELECT COUNT(*) as c FROM products WHERE status = 'pending'", [])['c'] ?? 0),
             'total_revenue' => (float) (Database::first("SELECT COALESCE(SUM(total), 0) as c FROM orders WHERE payment_status = 'paid'", [])['c'] ?? 0.0),
+            'open_tickets' => Ticket::countOpen(),
         ];
 
         return Response::view('admin/dashboard', [
@@ -1288,5 +1290,69 @@ class AdminController
 
         Session::flash('success', 'Page updated.');
         Response::redirect('/admin/pages');
+    }
+
+    public function tickets(): string
+    {
+        $status = Request::input('status');
+        $priority = Request::input('priority');
+
+        $filters = [];
+        if (in_array($status, ['open', 'in_progress', 'resolved', 'closed'], true)) {
+            $filters['status'] = $status;
+        }
+        if (in_array($priority, ['low', 'medium', 'high'], true)) {
+            $filters['priority'] = $priority;
+        }
+
+        return Response::view('admin/tickets/index', [
+            'tickets' => Ticket::all($filters),
+            'status' => $status,
+            'priority' => $priority,
+            'openCount' => Ticket::countOpen(),
+        ]);
+    }
+
+    public function showTicket(string $id): string
+    {
+        $ticket = Ticket::findById((int) $id);
+        if (!$ticket) {
+            throw new HttpException('Ticket not found.', 404);
+        }
+
+        return Response::view('admin/tickets/show', [
+            'ticket' => $ticket,
+            'replies' => Ticket::replies((int) $id),
+        ]);
+    }
+
+    public function replyTicket(string $id): void
+    {
+        $ticket = Ticket::findById((int) $id);
+        if (!$ticket) {
+            throw new HttpException('Ticket not found.', 404);
+        }
+
+        $message = trim(Request::input('message', ''));
+        if (empty($message)) {
+            Session::flash('error', 'Reply message is required.');
+            Response::redirect('/admin/tickets/' . $id);
+        }
+
+        $adminId = (int) Session::get('user_id');
+        Ticket::addReply((int) $id, $adminId, $message, true);
+
+        $status = Request::input('status');
+        if (in_array($status, ['open', 'in_progress', 'resolved', 'closed'], true)) {
+            Ticket::updateStatus((int) $id, $status);
+        }
+
+        $priority = Request::input('priority');
+        if (in_array($priority, ['low', 'medium', 'high'], true)) {
+            Ticket::updatePriority((int) $id, $priority);
+        }
+
+        Session::flash('success', 'Reply posted.');
+        Response::redirect('/admin/tickets/' . $id);
     }
 }

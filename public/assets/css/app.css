@@ -2272,3 +2272,200 @@ html[data-theme="dark"] .vendor-product-status[data-status="pending"] {
         flex-direction: row;
     }
 }
+
+/* Tickets */
+
+.ticket-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ticket-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ticket-row:hover {
+    background: var(--bg);
+    border-color: var(--primary);
+    text-decoration: none;
+    color: inherit;
+}
+
+.ticket-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.ticket-subject {
+    margin: 0;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ticket-meta {
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.ticket-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.ticket-status,
+.ticket-priority {
+    display: inline-flex;
+    padding: 0.25rem 0.65rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--surface);
+    color: var(--muted);
+    border: 1px solid var(--border);
+}
+
+.ticket-status[data-status="open"] {
+    background: rgba(59, 130, 246, 0.12);
+    color: #1d4ed8;
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.ticket-status[data-status="in_progress"] {
+    background: rgba(245, 158, 11, 0.12);
+    color: #92400e;
+    border-color: rgba(245, 158, 11, 0.25);
+}
+
+.ticket-status[data-status="resolved"] {
+    background: rgba(34, 197, 94, 0.12);
+    color: #15803d;
+    border-color: rgba(34, 197, 94, 0.25);
+}
+
+.ticket-status[data-status="closed"] {
+    background: rgba(148, 163, 184, 0.12);
+    color: #475569;
+    border-color: rgba(148, 163, 184, 0.25);
+}
+
+.ticket-priority[data-priority="high"] {
+    background: rgba(239, 68, 68, 0.12);
+    color: #b91c1c;
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+.ticket-priority[data-priority="medium"] {
+    background: rgba(245, 158, 11, 0.12);
+    color: #92400e;
+    border-color: rgba(245, 158, 11, 0.25);
+}
+
+.ticket-priority[data-priority="low"] {
+    background: rgba(34, 197, 94, 0.12);
+    color: #15803d;
+    border-color: rgba(34, 197, 94, 0.25);
+}
+
+html[data-theme="dark"] .ticket-status[data-status="open"] {
+    color: #60a5fa;
+}
+
+html[data-theme="dark"] .ticket-status[data-status="in_progress"] {
+    color: #fbbf24;
+}
+
+html[data-theme="dark"] .ticket-status[data-status="resolved"] {
+    color: #4ade80;
+}
+
+html[data-theme="dark"] .ticket-status[data-status="closed"] {
+    color: #94a3b8;
+}
+
+html[data-theme="dark"] .ticket-priority[data-priority="high"] {
+    color: #f87171;
+}
+
+html[data-theme="dark"] .ticket-priority[data-priority="medium"] {
+    color: #fbbf24;
+}
+
+html[data-theme="dark"] .ticket-priority[data-priority="low"] {
+    color: #4ade80;
+}
+
+.ticket-conversation {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ticket-message {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    max-width: 90%;
+}
+
+.ticket-message-user {
+    background: var(--surface);
+    align-self: flex-start;
+}
+
+.ticket-message-admin {
+    background: rgba(59, 130, 246, 0.08);
+    align-self: flex-end;
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.ticket-message-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.ticket-message-time {
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .ticket-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .ticket-badges {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .ticket-subject {
+        white-space: normal;
+    }
+
+    .ticket-message {
+        max-width: 100%;
+    }
+}

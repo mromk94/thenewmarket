@@ -73,6 +73,11 @@
         <span class="vendor-action-title">Sales</span>
         <span class="vendor-action-hint">Orders & payouts</span>
     </a>
+    <a href="<?= url('/vendor/support') ?>" class="vendor-action glass-card">
+        <span class="vendor-action-icon">?</span>
+        <span class="vendor-action-title">Support</span>
+        <span class="vendor-action-hint">Request help</span>
+    </a>
     <a href="<?= url('/store/' . $vendor['slug']) ?>" class="vendor-action glass-card">
         <span class="vendor-action-icon">&#127760;</span>
         <span class="vendor-action-title">Storefront</span>

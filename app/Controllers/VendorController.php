@@ -12,6 +12,7 @@ use App\Core\Session;
 use App\Models\Category;
 use App\Models\DepositMethod;
 use App\Models\Product;
+use App\Models\Ticket;
 use App\Models\Vendor;
 use App\Models\VendorDeposit;
 use App\Models\Withdrawal;
@@ -428,6 +429,72 @@ class VendorController
             'orders' => $orders,
             'items' => $items,
             'totals' => $totals,
+        ]);
+    }
+
+    public function support(): string
+    {
+        $vendor = self::currentVendor();
+        $tickets = Ticket::forVendor((int) $vendor['id']);
+
+        return Response::view('vendor/support/index', [
+            'vendor' => $vendor,
+            'tickets' => $tickets,
+        ]);
+    }
+
+    public function storeTicket(): void
+    {
+        $vendor = self::currentVendor();
+        $subject = trim(Request::input('subject', ''));
+        $message = trim(Request::input('message', ''));
+        $category = trim(Request::input('category', 'general'));
+        $priority = in_array(Request::input('priority', 'medium'), ['low', 'medium', 'high'], true)
+            ? Request::input('priority', 'medium')
+            : 'medium';
+
+        if (empty($subject) || empty($message)) {
+            Session::flash('error', 'Subject and message are required.');
+            Session::setOld(Request::all());
+            Response::redirect('/vendor/support');
+        }
+
+        Ticket::create([
+            'user_id' => (int) $vendor['user_id'],
+            'vendor_id' => (int) $vendor['id'],
+            'subject' => $subject,
+            'message' => $message,
+            'category' => $category,
+            'priority' => $priority,
+            'status' => 'open',
+        ]);
+
+        Session::flash('success', 'Support ticket submitted.');
+        Response::redirect('/vendor/support');
+    }
+
+    public function showTicket(string $id): string
+    {
+        $vendor = self::currentVendor();
+        $ticket = Ticket::findById((int) $id);
+
+        if (!$ticket || (int) $ticket['vendor_id'] !== (int) $vendor['id']) {
+            throw new HttpException('Ticket not found.', 404);
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $message = trim(Request::input('message', ''));
+            if (!empty($message)) {
+                Ticket::addReply((int) $id, (int) $vendor['user_id'], $message, false);
+                Session::flash('success', 'Reply added.');
+                Response::redirect('/vendor/support/' . $id);
+            }
+        }
+
+        return Response::view('vendor/support/show', [
+            'ticket' => $ticket,
+            'replies' => Ticket::replies((int) $id),
+            'vendor' => $vendor,
         ]);
     }
 

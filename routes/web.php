@@ -83,6 +83,11 @@ Router::get('/vendor/products/{id}/edit', [VendorController::class, 'editProduct
 Router::post('/vendor/products/{id}', [VendorController::class, 'updateProduct'])->name('vendor.product.update')->middleware(['auth', 'vendor', 'csrf']);
 Router::post('/vendor/products/{id}/delete', [VendorController::class, 'deleteProduct'])->name('vendor.product.delete')->middleware(['auth', 'vendor', 'csrf']);
 
+Router::get('/vendor/support', [VendorController::class, 'support'])->name('vendor.support')->middleware(['auth', 'vendor']);
+Router::post('/vendor/support', [VendorController::class, 'storeTicket'])->name('vendor.support.store')->middleware(['auth', 'vendor', 'csrf']);
+Router::get('/vendor/support/{id}', [VendorController::class, 'showTicket'])->name('vendor.support.show')->middleware(['auth', 'vendor']);
+Router::post('/vendor/support/{id}', [VendorController::class, 'showTicket'])->name('vendor.support.reply')->middleware(['auth', 'vendor', 'csrf']);
+
 Router::get('/vendor/{slug}', [VendorController::class, 'storefront'])->name('vendor.storefront');
 
 Router::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin']);
@@ -166,6 +171,10 @@ Router::post('/admin/categories/{id}/delete', [AdminController::class, 'deleteCa
 Router::get('/admin/settings/{group}', [AdminController::class, 'settings'])->name('admin.settings')->middleware(['auth', 'admin']);
 Router::post('/admin/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update')->middleware(['auth', 'admin', 'csrf']);
 Router::post('/admin/settings/mail/test', [AdminController::class, 'sendTestEmail'])->name('admin.settings.mail.test')->middleware(['auth', 'admin', 'csrf']);
+
+Router::get('/admin/tickets', [AdminController::class, 'tickets'])->name('admin.tickets')->middleware(['auth', 'admin']);
+Router::get('/admin/tickets/{id}', [AdminController::class, 'showTicket'])->name('admin.ticket.show')->middleware(['auth', 'admin']);
+Router::post('/admin/tickets/{id}/reply', [AdminController::class, 'replyTicket'])->name('admin.ticket.reply')->middleware(['auth', 'admin', 'csrf']);
 
 Router::get('/about', [PagesController::class, 'about'])->name('about');
 Router::get('/contact', [PagesController::class, 'contact'])->name('contact');

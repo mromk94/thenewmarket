@@ -29,6 +29,10 @@
         <h3><?= number_format($stats['pending_vendors'] + $stats['pending_products']) ?></h3>
         <p style="color:var(--muted);">Pending Approvals</p>
     </div>
+    <div class="glass-card">
+        <h3><?= number_format($stats['open_tickets']) ?></h3>
+        <p style="color:var(--muted);">Open Tickets</p>
+    </div>
 </section>
 
 <section class="mt-4">
@@ -98,6 +102,11 @@
             <h3>Notifications</h3>
             <p style="color:var(--muted);">Broadcast in-app messages.</p>
             <a href="<?= url('/admin/notifications') ?>" class="btn btn-outline">Send notification</a>
+        </div>
+        <div class="glass-card">
+            <h3>Support Tickets</h3>
+            <p style="color:var(--muted);">Vendor requests and replies.</p>
+            <a href="<?= url('/admin/tickets') ?>" class="btn btn-outline">View tickets</a>
         </div>
         <div class="glass-card">
             <h3>Refunds</h3>
