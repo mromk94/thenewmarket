@@ -132,7 +132,8 @@ if ((int) $product['stock_qty'] <= 0) {
                     </div>
                     <span style="color:var(--muted); font-size:0.85rem;"><?= e($r['created_at']) ?></span>
                 </div>
-                <div style="color:#f59e0b; margin:0.25rem 0;"><?= str_repeat('★', (int) $r['rating']) ?><?= str_repeat('☆', 5 - (int) $r['rating']) ?></div>
+                <?php $rating = min(5, max(0, (int) ($r['rating'] ?? 0))); ?>
+                <div style="color:#f59e0b; margin:0.25rem 0;"><?= str_repeat('★', $rating) ?><?= str_repeat('☆', 5 - $rating) ?></div>
                 <?php if ($r['title']): ?><h4 style="margin:0.25rem 0; font-size:1rem;"><?= e($r['title']) ?></h4><?php endif; ?>
                 <p style="margin:0; color:var(--text);"><?= e($r['body']) ?></p>
             </div>

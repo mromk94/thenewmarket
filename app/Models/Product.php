@@ -48,7 +48,7 @@ class Product
                AND p.visibility = 'public'
                AND p.id != :product_id
                AND p.category_id = :category_id
-             ORDER BY RAND()
+             ORDER BY p.created_at DESC
              LIMIT {$limit}",
             ['product_id' => $productId, 'category_id' => $categoryId]
         );
