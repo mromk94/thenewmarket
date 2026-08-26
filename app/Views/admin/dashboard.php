@@ -74,6 +74,11 @@
             <a href="<?= url('/admin/payment-methods') ?>" class="btn btn-outline">Manage methods</a>
         </div>
         <div class="glass-card">
+            <h3>Currencies</h3>
+            <p style="color:var(--muted);">Set exchange rates for multi-currency display.</p>
+            <a href="<?= url('/admin/currencies') ?>" class="btn btn-outline">Manage currencies</a>
+        </div>
+        <div class="glass-card">
             <h3>Payment Proofs</h3>
             <p style="color:var(--muted);">Review customer payment uploads.</p>
             <a href="<?= url('/admin/payment-proofs') ?>" class="btn btn-outline">View proofs</a>

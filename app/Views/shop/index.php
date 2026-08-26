@@ -60,9 +60,9 @@
                     </div>
                     <h3 style="margin:0 0 0.25rem;"><a href="<?= url('/product/' . $p['slug']) ?>"><?= e($p['name']) ?></a></h3>
                     <p style="color:var(--muted); font-size:0.9rem; margin:0 0 0.5rem;"><?= e($p['category_name'] ?? '') ?> · <?= e($p['vendor_name'] ?? 'Marketplace') ?></p>
-                    <p style="font-weight:700; font-size:1.1rem;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $p['price'], 2) ?></p>
+                    <p style="font-weight:700; font-size:1.1rem;"><?= format_price((float) $p['price']) ?></p>
                 </div>
-                <a class="btn btn-primary" href="<?= url('/product/' . $p['slug']) ?>" style="margin-top:0.75rem;">View product</a>
+                <a class="btn btn-primary" href="<?= url('/product/' . $p['slug']) ?>" style="margin-top:0.75rem;"><?= t('view') ?></a>
             </div>
         <?php endforeach; ?>
     <?php endif; ?>

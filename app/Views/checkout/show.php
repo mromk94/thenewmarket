@@ -36,7 +36,7 @@
                             </div>
                         </td>
                         <td><?= (int) $item['quantity'] ?></td>
-                        <td style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $item['unit_price'] * (int) $item['quantity'], 2) ?></td>
+                        <td style="text-align:right;"><?= format_price((float) $item['unit_price'] * (int) $item['quantity']) ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -44,25 +44,25 @@
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
             <span style="color:var(--muted);">Subtotal</span>
-            <span><?= e(config('app.currency_symbol')) ?><?= number_format($summary['subtotal'], 2) ?></span>
+            <span><?= format_price($summary['subtotal']) ?></span>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
             <span style="color:var(--muted);">Shipping</span>
-            <span><?= $summary['shipping'] === 0.0 ? 'Free' : e(config('app.currency_symbol')) . number_format($summary['shipping'], 2) ?></span>
+            <span><?= $summary['shipping'] === 0.0 ? 'Free' : format_price($summary['shipping']) ?></span>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
             <span style="color:var(--muted);">Tax</span>
-            <span><?= e(config('app.currency_symbol')) ?><?= number_format($summary['tax'], 2) ?></span>
+            <span><?= format_price($summary['tax']) ?></span>
         </div>
         <?php if ($summary['discount'] > 0): ?>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
                 <span style="color:var(--muted);">Discount</span>
-                <span>-<?= e(config('app.currency_symbol')) ?><?= number_format($summary['discount'], 2) ?></span>
+                <span>-<?= format_price($summary['discount']) ?></span>
             </div>
         <?php endif; ?>
         <div style="display:flex; justify-content:space-between; align-items:center; font-size:1.25rem; font-weight:700; margin-bottom:1.5rem; padding-top:1rem; border-top:1px solid var(--border);">
             <span>Total</span>
-            <span><?= e(config('app.currency_symbol')) ?><?= number_format($summary['total'], 2) ?></span>
+            <span><?= format_price($summary['total']) ?></span>
         </div>
     </section>
 

@@ -105,3 +105,32 @@ if (!function_exists('route')) {
         return App\Core\Router::route($name, $params);
     }
 }
+
+if (!function_exists('currency')) {
+    function currency(): array
+    {
+        return App\Models\Currency::current();
+    }
+}
+
+if (!function_exists('currency_symbol')) {
+    function currency_symbol(): string
+    {
+        return (string) (currency()['symbol'] ?? '$');
+    }
+}
+
+if (!function_exists('format_price')) {
+    function format_price(float $amount): string
+    {
+        $converted = App\Models\Currency::toCurrent($amount, App\Models\Currency::default());
+        return e(currency_symbol()) . number_format($converted, 2);
+    }
+}
+
+if (!function_exists('t')) {
+    function t(string $key, string $default = ''): string
+    {
+        return App\Lang::line($key, $default);
+    }
+}

@@ -10,8 +10,8 @@
         </button>
 
         <ul class="nav-links">
-            <li><a href="<?= url('/shop') ?>">Shop</a></li>
-            <li><a href="<?= url('/vendors') ?>">Vendors</a></li>
+            <li><a href="<?= url('/shop') ?>"><?= t('shop') ?></a></li>
+            <li><a href="<?= url('/vendors') ?>"><?= t('vendors') ?></a></li>
             <li>
                 <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode" aria-pressed="false" style="width:2rem;height:2rem;">
                     <span class="theme-icon" aria-hidden="true">☾</span>
@@ -32,17 +32,17 @@
                 <li>
                     <a href="<?= url('/account/notifications') ?>">Notifications<?= $unreadCount > 0 ? ' <span class="badge" style="background:#ef4444; color:#fff;">' . $unreadCount . '</span>' : '' ?></a>
                 </li>
-                <li><a href="<?= url('/cart') ?>">Cart</a></li>
-                <li><a href="<?= url('/account') ?>">Account</a></li>
+                <li><a href="<?= url('/cart') ?>"><?= t('cart') ?></a></li>
+                <li><a href="<?= url('/account') ?>"><?= t('account') ?></a></li>
                 <li>
                     <form action="<?= url('/logout') ?>" method="POST" style="display:inline;">
                         <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-outline" style="padding:0.4rem 0.8rem;">Logout</button>
+                        <button type="submit" class="btn btn-outline" style="padding:0.4rem 0.8rem;"><?= t('logout') ?></button>
                     </form>
                 </li>
             <?php else: ?>
-                <li><a href="<?= url('/login') ?>">Sign in</a></li>
-                <li><a href="<?= url('/register') ?>" class="btn btn-primary" style="padding:0.4rem 0.8rem;">Register</a></li>
+                <li><a href="<?= url('/login') ?>"><?= t('login') ?></a></li>
+                <li><a href="<?= url('/register') ?>" class="btn btn-primary" style="padding:0.4rem 0.8rem;"><?= t('register') ?></a></li>
             <?php endif; ?>
         </ul>
     </div>

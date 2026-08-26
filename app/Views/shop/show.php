@@ -49,9 +49,9 @@ if ((int) $product['stock_qty'] <= 0) {
         </div>
 
         <div class="product-price" style="font-size:clamp(1.75rem,4vw,2.25rem); font-weight:700; margin:0.5rem 0;">
-            <?= e(config('app.currency_symbol')) ?><?= number_format($displayPrice, 2) ?>
+            <?= format_price($displayPrice) ?>
             <?php if ($originalPrice): ?>
-                <del style="color:var(--muted); font-size:1.15rem; font-weight:500; margin-left:0.5rem;"><?= e(config('app.currency_symbol')) ?><?= number_format($originalPrice, 2) ?></del>
+                <del style="color:var(--muted); font-size:1.15rem; font-weight:500; margin-left:0.5rem;"><?= format_price($originalPrice) ?></del>
             <?php endif; ?>
         </div>
 
@@ -175,9 +175,9 @@ if ((int) $product['stock_qty'] <= 0) {
                     </a>
                     <h3 style="margin:0.75rem 0 0.25rem; font-size:1rem;"><a href="<?= url('/product/' . $p['slug']) ?>"><?= e($p['name']) ?></a></h3>
                     <p style="color:var(--muted); font-size:0.85rem; margin:0 0 0.5rem;"><?= e($p['category_name'] ?? '') ?> · <?= e($p['vendor_name'] ?? 'Marketplace') ?></p>
-                    <p style="font-weight:700; font-size:1.1rem;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $p['price'], 2) ?></p>
+                    <p style="font-weight:700; font-size:1.1rem;"><?= format_price((float) $p['price']) ?></p>
                 </div>
-                <a class="btn btn-outline" href="<?= url('/product/' . $p['slug']) ?>" style="margin-top:0.75rem;">View product</a>
+                <a class="btn btn-outline" href="<?= url('/product/' . $p['slug']) ?>" style="margin-top:0.75rem;"><?= t('view') ?></a>
             </div>
         <?php endforeach; ?>
     </div>
@@ -200,9 +200,9 @@ if ((int) $product['stock_qty'] <= 0) {
                     </a>
                     <h3 style="margin:0.75rem 0 0.25rem; font-size:1rem;"><a href="<?= url('/product/' . $p['slug']) ?>"><?= e($p['name']) ?></a></h3>
                     <p style="color:var(--muted); font-size:0.85rem; margin:0 0 0.5rem;"><?= e($p['category_name'] ?? '') ?> · <?= e($p['vendor_name'] ?? 'Marketplace') ?></p>
-                    <p style="font-weight:700; font-size:1.1rem;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $p['price'], 2) ?></p>
+                    <p style="font-weight:700; font-size:1.1rem;"><?= format_price((float) $p['price']) ?></p>
                 </div>
-                <a class="btn btn-outline" href="<?= url('/product/' . $p['slug']) ?>" style="margin-top:0.75rem;">View product</a>
+                <a class="btn btn-outline" href="<?= url('/product/' . $p['slug']) ?>" style="margin-top:0.75rem;"><?= t('view') ?></a>
             </div>
         <?php endforeach; ?>
     </div>

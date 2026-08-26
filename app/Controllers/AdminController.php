@@ -11,6 +11,7 @@ use App\Core\Response;
 use App\Core\Session;
 use App\Models\Category;
 use App\Models\Coupon;
+use App\Models\Currency;
 use App\Models\DepositMethod;
 use App\Models\Notification;
 use App\Models\PaymentMethod;
@@ -1413,5 +1414,70 @@ class AdminController
         }
 
         Response::redirect('/admin/delivery');
+    }
+
+    public function currencies(): string
+    {
+        return Response::view('admin/currencies/index', [
+            'currencies' => Currency::all(),
+            'defaultId' => (Currency::default()['id'] ?? 0),
+        ]);
+    }
+
+    public function storeCurrency(): void
+    {
+        $code = strtoupper(trim(Request::input('code', '')));
+        $name = trim(Request::input('name', ''));
+        $symbol = trim(Request::input('symbol', ''));
+        $rate = (float) Request::input('exchange_rate', 1);
+
+        if (empty($code) || empty($name) || empty($symbol)) {
+            Session::flash('error', 'Code, name, and symbol are required.');
+            Response::redirect('/admin/currencies');
+        }
+
+        Currency::create([
+            'code' => $code,
+            'name' => $name,
+            'symbol' => $symbol,
+            'exchange_rate' => $rate,
+            'is_active' => (int) Request::input('is_active', 1),
+        ]);
+
+        Session::flash('success', 'Currency added.');
+        Response::redirect('/admin/currencies');
+    }
+
+    public function updateCurrency(string $id): void
+    {
+        $currency = Currency::find((int) $id);
+        if (!$currency) {
+            throw new HttpException('Currency not found.', 404);
+        }
+
+        Currency::update((int) $id, [
+            'code' => strtoupper(trim(Request::input('code', $currency['code']))),
+            'name' => trim(Request::input('name', $currency['name'])),
+            'symbol' => trim(Request::input('symbol', $currency['symbol'])),
+            'exchange_rate' => (float) Request::input('exchange_rate', $currency['exchange_rate']),
+            'is_active' => (int) Request::input('is_active', $currency['is_active']),
+        ]);
+
+        Session::flash('success', 'Currency updated.');
+        Response::redirect('/admin/currencies');
+    }
+
+    public function deleteCurrency(string $id): void
+    {
+        Currency::delete((int) $id);
+        Session::flash('success', 'Currency deleted.');
+        Response::redirect('/admin/currencies');
+    }
+
+    public function setDefaultCurrency(string $id): void
+    {
+        Currency::setDefault((int) $id);
+        Session::flash('success', 'Default currency set.');
+        Response::redirect('/admin/currencies');
     }
 }

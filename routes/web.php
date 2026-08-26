@@ -179,6 +179,15 @@ Router::post('/admin/tickets/{id}/reply', [AdminController::class, 'replyTicket'
 Router::get('/admin/delivery', [AdminController::class, 'delivery'])->name('admin.delivery')->middleware(['auth', 'admin']);
 Router::post('/admin/delivery/{id}/update', [AdminController::class, 'updateDelivery'])->name('admin.delivery.update')->middleware(['auth', 'admin', 'csrf']);
 
+Router::get('/admin/currencies', [AdminController::class, 'currencies'])->name('admin.currencies')->middleware(['auth', 'admin']);
+Router::post('/admin/currencies', [AdminController::class, 'storeCurrency'])->name('admin.currencies.store')->middleware(['auth', 'admin', 'csrf']);
+Router::post('/admin/currencies/{id}/update', [AdminController::class, 'updateCurrency'])->name('admin.currencies.update')->middleware(['auth', 'admin', 'csrf']);
+Router::post('/admin/currencies/{id}/delete', [AdminController::class, 'deleteCurrency'])->name('admin.currencies.delete')->middleware(['auth', 'admin', 'csrf']);
+Router::post('/admin/currencies/{id}/default', [AdminController::class, 'setDefaultCurrency'])->name('admin.currencies.default')->middleware(['auth', 'admin', 'csrf']);
+
+Router::post('/currency', [\App\Controllers\CurrencyController::class, 'switch'])->name('currency.switch')->middleware([]);
+Router::post('/language', [\App\Controllers\LanguageController::class, 'switch'])->name('language.switch')->middleware([]);
+
 Router::get('/about', [PagesController::class, 'about'])->name('about');
 Router::get('/contact', [PagesController::class, 'contact'])->name('contact');
 Router::get('/terms', [PagesController::class, 'terms'])->name('terms');

@@ -20,7 +20,7 @@
                 <?php foreach ($orders as $o): ?>
                     <tr style="border-bottom:1px solid var(--border);">
                         <td style="padding:0.5rem 0;"><?= e($o['order_number']) ?></td>
-                        <td><?= e(config('app.currency_symbol')) ?><?= number_format((float) $o['total'], 2) ?></td>
+                        <td><?= format_price((float) $o['total']) ?></td>
                         <td><?= e($o['status']) ?></td>
                         <td><?= e($o['created_at']) ?></td>
                         <td><a href="<?= url('/account/orders/' . $o['id']) ?>" class="btn btn-outline" style="padding:0.35rem 0.7rem;">View</a></td>

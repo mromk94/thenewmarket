@@ -20,7 +20,7 @@
                 <tr style="border-bottom:1px solid var(--border);">
                     <td style="padding:0.5rem 0; word-break:break-word;"><?= e($i['product_name']) ?></td>
                     <td><?= (int) $i['quantity'] ?></td>
-                    <td style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $i['subtotal'], 2) ?></td>
+                    <td style="text-align:right;"><?= format_price((float) $i['subtotal']) ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
@@ -28,15 +28,15 @@
 
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-bottom:1.5rem;">
         <span style="color:var(--muted);">Subtotal</span>
-        <span style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $order['subtotal'], 2) ?></span>
+        <span style="text-align:right;"><?= format_price((float) $order['subtotal']) ?></span>
         <span style="color:var(--muted);">Delivery</span>
-        <span style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $order['shipping'], 2) ?></span>
+        <span style="text-align:right;"><?= format_price((float) $order['shipping']) ?></span>
         <?php if (!empty($order['tax']) && (float) $order['tax'] > 0): ?>
             <span style="color:var(--muted);">Tax</span>
-            <span style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $order['tax'], 2) ?></span>
+            <span style="text-align:right;"><?= format_price((float) $order['tax']) ?></span>
         <?php endif; ?>
         <span style="font-size:1.25rem; font-weight:700; padding-top:0.75rem; border-top:1px solid var(--border);">Total</span>
-        <span style="font-size:1.25rem; font-weight:700; text-align:right; padding-top:0.75rem; border-top:1px solid var(--border);"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $order['total'], 2) ?></span>
+        <span style="font-size:1.25rem; font-weight:700; text-align:right; padding-top:0.75rem; border-top:1px solid var(--border);"><?= format_price((float) $order['total']) ?></span>
     </div>
 
     <div style="margin-bottom:1.5rem;">

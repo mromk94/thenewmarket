@@ -39,7 +39,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><?= e(config('app.currency_symbol')) ?><?= number_format((float) $item['unit_price'], 2) ?></td>
+                                <td><?= format_price((float) $item['unit_price']) ?></td>
                                 <td>
                                     <form action="<?= url('/cart/' . $item['cart_item_id'] . '/update') ?>" method="POST" data-ajax-cart="update" style="display:inline-flex; gap:0.5rem; align-items:center;">
                                         <?= csrf_field() ?>
@@ -47,7 +47,7 @@
                                         <button type="submit" class="btn btn-outline" style="padding:0.4rem 0.8rem;">Update</button>
                                     </form>
                                 </td>
-                                <td style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format((float) $item['unit_price'] * (int) $item['quantity'], 2) ?></td>
+                                <td style="text-align:right;"><?= format_price((float) $item['unit_price'] * (int) $item['quantity']) ?></td>
                                 <td style="text-align:right;">
                                     <form action="<?= url('/cart/' . $item['cart_item_id'] . '/remove') ?>" method="POST" data-ajax-cart="remove" style="display:inline;">
                                         <?= csrf_field() ?>
@@ -76,21 +76,21 @@
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:1.5rem;">
                 <span style="color:var(--muted);">Subtotal</span>
-                <span style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format($summary['subtotal'], 2) ?></span>
+                <span style="text-align:right;"><?= format_price($summary['subtotal']) ?></span>
 
                 <span style="color:var(--muted);">Shipping</span>
-                <span style="text-align:right;"><?= $summary['shipping'] === 0.0 ? 'Free' : e(config('app.currency_symbol')) . number_format($summary['shipping'], 2) ?></span>
+                <span style="text-align:right;"><?= $summary['shipping'] === 0.0 ? 'Free' : format_price($summary['shipping']) ?></span>
 
                 <span style="color:var(--muted);">Tax</span>
-                <span style="text-align:right;"><?= e(config('app.currency_symbol')) ?><?= number_format($summary['tax'], 2) ?></span>
+                <span style="text-align:right;"><?= format_price($summary['tax']) ?></span>
 
                 <?php if ($summary['discount'] > 0): ?>
                     <span style="color:var(--muted);">Discount</span>
-                    <span style="text-align:right; color:var(--success);">-<?= e(config('app.currency_symbol')) ?><?= number_format($summary['discount'], 2) ?></span>
+                    <span style="text-align:right; color:var(--success);">-<?= format_price($summary['discount']) ?></span>
                 <?php endif; ?>
 
                 <span style="font-size:1.25rem; font-weight:700; padding-top:0.75rem; border-top:1px solid var(--border);">Total</span>
-                <span style="font-size:1.25rem; font-weight:700; text-align:right; padding-top:0.75rem; border-top:1px solid var(--border);" data-cart-total="true"><?= e(config('app.currency_symbol')) ?><?= number_format($summary['total'], 2) ?></span>
+                <span style="font-size:1.25rem; font-weight:700; text-align:right; padding-top:0.75rem; border-top:1px solid var(--border);" data-cart-total="true"><?= format_price($summary['total']) ?></span>
             </div>
 
             <div style="text-align:right; margin-top:1.5rem;">
