@@ -31,7 +31,7 @@
                     </div>
                     <p class="vendor-method-currency"><?= e($m['currency']) ?></p>
                     <p class="vendor-method-instructions"><?= e($m['instructions'] ?: 'Select this method to see transfer details.') ?></p>
-                    <button type="button" class="btn btn-primary" style="width:100%;" onclick="openDepositModal(<?= (int) $m['id'] ?>)">Use this method</button>
+                    <button type="button" class="btn btn-primary" style="width:100%;" data-open-deposit="<?= (int) $m['id'] ?>">Use this method</button>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -60,10 +60,10 @@
     <?php endif; ?>
 </section>
 
-<div id="deposit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1022; align-items:center; justify-content:center; padding:1rem;">
-    <div class="glass-card" style="width:100%; max-width:520px; max-height:90vh; overflow:auto; padding:1.5rem; position:relative;">
-        <button type="button" onclick="closeDepositModal()" style="position:absolute; top:1rem; right:1rem; background:transparent; border:none; font-size:1.25rem; cursor:pointer; color:var(--muted);">×</button>
-        <h2 id="modal-title" class="mb-2">Top up</h2>
+<div id="deposit-modal" class="modal">
+    <div class="glass-card modal-card">
+        <button type="button" class="modal-close" data-close-deposit aria-label="Close">×</button>
+        <h2 id="modal-title" class="mb-2" style="padding-right:2rem;">Top up</h2>
 
         <div id="modal-details" style="margin-bottom:1rem;"></div>
 
@@ -89,8 +89,8 @@
             <p style="color:var(--muted); font-size:0.85rem;">Your request will be reviewed before the funds are added to your wallet.</p>
 
             <div style="display:flex; gap:0.5rem; margin-top:1rem;">
-                <button type="submit" class="btn btn-primary">Submit request</button>
-                <button type="button" class="btn btn-outline" onclick="closeDepositModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="flex:1;">Submit request</button>
+                <button type="button" class="btn btn-outline" data-close-deposit>Cancel</button>
             </div>
         </form>
     </div>
@@ -121,10 +121,26 @@ function openDepositModal(methodId) {
     if (method.instructions) details += '<p style="margin:0.75rem 0 0; color:var(--muted); font-size:0.9rem;">' + method.instructions + '</p>';
 
     document.getElementById('modal-details').innerHTML = details;
-    document.getElementById('deposit-modal').style.display = 'flex';
+    document.getElementById('deposit-modal').classList.add('is-open');
+    document.body.style.overflow = 'hidden';
 }
 
 function closeDepositModal() {
-    document.getElementById('deposit-modal').style.display = 'none';
+    document.getElementById('deposit-modal').classList.remove('is-open');
+    document.body.style.overflow = '';
 }
+
+document.querySelectorAll('[data-open-deposit]').forEach(btn => {
+    btn.addEventListener('click', function () {
+        openDepositModal(parseInt(this.dataset.openDeposit));
+    });
+});
+
+document.querySelectorAll('[data-close-deposit]').forEach(btn => {
+    btn.addEventListener('click', closeDepositModal);
+});
+
+document.getElementById('deposit-modal').addEventListener('click', function (e) {
+    if (e.target === this) closeDepositModal();
+});
 </script>

@@ -6,7 +6,7 @@
         </div>
         <span class="vendor-status" data-status="<?= e($vendor['status']) ?>"><?= e(ucfirst($vendor['status'])) ?></span>
     </div>
-    <a href="<?= url('/store/' . $vendor['slug']) ?>" class="btn btn-outline">View storefront</a>
+    <a href="<?= url('/vendor/' . $vendor['slug']) ?>" class="btn btn-outline">View storefront</a>
 </section>
 
 <section class="vendor-balance glass-card">
@@ -78,7 +78,7 @@
         <span class="vendor-action-title">Support</span>
         <span class="vendor-action-hint">Request help</span>
     </a>
-    <a href="<?= url('/store/' . $vendor['slug']) ?>" class="vendor-action glass-card">
+    <a href="<?= url('/vendor/' . $vendor['slug']) ?>" class="vendor-action glass-card">
         <span class="vendor-action-icon">&#127760;</span>
         <span class="vendor-action-title">Storefront</span>
         <span class="vendor-action-hint">View your store</span>
