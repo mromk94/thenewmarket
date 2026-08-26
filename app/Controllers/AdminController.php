@@ -262,7 +262,7 @@ class AdminController
 
     public function settings(string $group = 'general'): string
     {
-        $allowed = ['general', 'branding', 'mail', 'commerce', 'payment', 'security', 'seo', 'legal'];
+        $allowed = ['general', 'branding', 'mail', 'commerce', 'payment', 'security', 'seo', 'legal', 'integrations'];
         if (!in_array($group, $allowed, true)) {
             throw new HttpException('Invalid settings group.', 404);
         }
@@ -317,6 +317,10 @@ class AdminController
                 'login_attempts' => '5',
                 'login_decay' => '900',
             ],
+            'integrations' => [
+                'jivo_enabled' => '0',
+                'jivo_code' => '',
+            ],
             'seo' => [
                 'default_title' => config('app.name'),
                 'default_description' => 'A premium multi-vendor marketplace.',
@@ -342,7 +346,7 @@ class AdminController
     public function updateSettings(): void
     {
         $group = Request::input('group', 'general');
-        $allowed = ['general', 'branding', 'mail', 'commerce', 'payment', 'security', 'seo', 'legal'];
+        $allowed = ['general', 'branding', 'mail', 'commerce', 'payment', 'security', 'seo', 'legal', 'integrations'];
         if (!in_array($group, $allowed, true)) {
             throw new HttpException('Invalid settings group.', 400);
         }

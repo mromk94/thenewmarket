@@ -43,5 +43,8 @@
     <script src="<?= asset('js/app.js') . '?v=4' ?>"></script>
     <script src="<?= asset('js/theme.js') . '?v=4' ?>"></script>
     <script src="<?= asset('js/cart.js') . '?v=4' ?>"></script>
+    <?php if ((int) setting('integrations', 'jivo_enabled', 0) === 1): ?>
+        <?= setting('integrations', 'jivo_code', '') ?>
+    <?php endif; ?>
 </body>
 </html>

@@ -55,6 +55,24 @@ if ((int) $product['stock_qty'] <= 0) {
             <?php endif; ?>
         </div>
 
+        <div style="display:flex; align-items:center; gap:0.5rem; margin:0.75rem 0; color:var(--muted); font-size:0.85rem;">
+            <span>We accept</span>
+            <svg width="32" height="20" viewBox="0 0 48 30" fill="none" aria-label="Visa" style="vertical-align:middle;">
+                <rect width="48" height="30" rx="3" fill="#1A1F71"/>
+                <path d="M20.6 21.5l3.6-14h-5.5l-5.8 14h7.7z" fill="#F7B600" opacity="0.9"/>
+                <path d="M32.5 7.5c-1.5 0-2.6.3-3.4 1.1l-.3.3c.8-.6 1.8-.8 2.7-.8 1.7 0 2.7.9 2.7 2.3 0 .3 0 .5-.1.8l-2.1 8.2h4.2l2.7-10.5c-1.3-1.5-3.4-1.4-6.4-1.4z" fill="#fff"/>
+            </svg>
+            <svg width="32" height="20" viewBox="0 0 48 30" fill="none" aria-label="Mastercard" style="vertical-align:middle;">
+                <rect width="48" height="30" rx="3" fill="#F2F2F2"/>
+                <circle cx="18" cy="15" r="9" fill="#EB001B" opacity="0.9"/>
+                <circle cx="30" cy="15" r="9" fill="#F79E1B" opacity="0.9"/>
+            </svg>
+            <svg width="32" height="20" viewBox="0 0 48 30" fill="none" aria-label="American Express" style="vertical-align:middle;">
+                <rect width="48" height="30" rx="3" fill="#006FCF"/>
+                <text x="24" y="19" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold" font-family="Arial, sans-serif">AMEX</text>
+            </svg>
+        </div>
+
         <p class="product-description" style="color:var(--muted); line-height:1.7; margin:1rem 0;"><?= e($product['description']) ?></p>
 
         <div class="product-meta" style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; margin:0.5rem 0 1rem; font-size:0.9rem; color:var(--muted);">

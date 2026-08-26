@@ -168,6 +168,18 @@
                 <label for="s_og_image">Open Graph image URL</label>
                 <input type="url" id="s_og_image" name="s_og_image" class="form-control" value="<?= e($values['og_image'] ?? '') ?>">
             </div>
+        <?php elseif ($group === 'integrations'): ?>
+            <div class="form-group">
+                <label for="s_jivo_enabled">
+                    <input type="checkbox" id="s_jivo_enabled" name="s_jivo_enabled" value="1" <?= (int) ($values['jivo_enabled'] ?? 0) ? 'checked' : '' ?>>
+                    Enable Jivo live chat
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="s_jivo_code">Jivo widget code</label>
+                <textarea id="s_jivo_code" name="s_jivo_code" class="form-control" rows="6" placeholder="Paste the Jivo widget script here..."><?= e($values['jivo_code'] ?? '') ?></textarea>
+                <small style="color:var(--muted);">This code will be injected before the closing &lt;/body&gt; tag on every page.</small>
+            </div>
         <?php else: ?>
             <p style="color:var(--muted);">No fields defined for this group yet.</p>
         <?php endif; ?>
