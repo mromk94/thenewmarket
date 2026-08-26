@@ -99,5 +99,24 @@
                 move();
             });
         });
+
+        // Product image gallery
+        const mainImage = document.getElementById('product-main-image');
+        const thumbs = document.querySelectorAll('.product-thumb');
+        if (mainImage && thumbs.length > 0) {
+            thumbs.forEach(function (thumb) {
+                thumb.addEventListener('click', function () {
+                    const src = this.getAttribute('data-src');
+                    if (src) {
+                        mainImage.src = src;
+                        thumbs.forEach(function (t) { t.classList.remove('active'); });
+                        this.classList.add('active');
+                    }
+                });
+            });
+            if (thumbs[0]) {
+                thumbs[0].classList.add('active');
+            }
+        }
     });
 })();

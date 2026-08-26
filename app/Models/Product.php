@@ -32,6 +32,45 @@ class Product
         );
     }
 
+    public static function findRelated(int $productId, ?int $categoryId, int $limit = 4): array
+    {
+        if (empty($categoryId)) {
+            return [];
+        }
+
+        return Database::select(
+            "SELECT p.*, c.name as category_name, v.business_name as vendor_name,
+                   (SELECT file_path FROM product_images WHERE product_id = p.id AND file_path != '' ORDER BY is_thumbnail DESC, sort_order LIMIT 1) as thumbnail
+             FROM products p
+             LEFT JOIN categories c ON c.id = p.category_id
+             LEFT JOIN vendors v ON v.id = p.vendor_id
+             WHERE p.status = 'published'
+               AND p.visibility = 'public'
+               AND p.id != :product_id
+               AND p.category_id = :category_id
+             ORDER BY RAND()
+             LIMIT {$limit}",
+            ['product_id' => $productId, 'category_id' => $categoryId]
+        );
+    }
+
+    public static function findHot(int $limit = 4): array
+    {
+        return Database::select(
+            "SELECT p.*, c.name as category_name, v.business_name as vendor_name,
+                   (SELECT file_path FROM product_images WHERE product_id = p.id AND file_path != '' ORDER BY is_thumbnail DESC, sort_order LIMIT 1) as thumbnail
+             FROM products p
+             LEFT JOIN categories c ON c.id = p.category_id
+             LEFT JOIN vendors v ON v.id = p.vendor_id
+             WHERE p.status = 'published'
+               AND p.visibility = 'public'
+               AND p.featured = 1
+             ORDER BY p.created_at DESC
+             LIMIT {$limit}",
+            []
+        );
+    }
+
     public static function countPublished(array $filters = []): int
     {
         $where = ["p.status = 'published'", "p.visibility = 'public'"];

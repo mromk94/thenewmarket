@@ -114,6 +114,13 @@ class ShopController
         $reviews = Review::forProduct((int) $product['id']);
         $reviewStats = Review::stats((int) $product['id']);
 
+        $related = Product::findRelated(
+            (int) $product['id'],
+            !empty($product['category_id']) ? (int) $product['category_id'] : null,
+            4
+        );
+        $hot = Product::findHot(4);
+
         $canReview = false;
         $reviewOrderId = 0;
         $customerId = (int) \App\Core\Session::get('user_id');
@@ -152,6 +159,8 @@ class ShopController
             'reviewStats' => $reviewStats,
             'canReview' => $canReview,
             'reviewOrderId' => $reviewOrderId,
+            'related' => $related,
+            'hot' => $hot,
         ]);
     }
 

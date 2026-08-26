@@ -1332,3 +1332,107 @@ a:hover {
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
 }
+
+/* Product page */
+.product-thumb {
+    border: 2px solid transparent;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.product-thumb:hover,
+.product-thumb.active {
+    border-color: var(--primary);
+    transform: scale(1.03);
+}
+
+.product-stock {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.65rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.product-stock-success {
+    background: rgba(34, 197, 94, 0.12);
+    color: #166534;
+}
+
+.product-stock-warning {
+    background: rgba(245, 158, 11, 0.12);
+    color: #92400e;
+}
+
+.product-stock-danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #991b1b;
+}
+
+.product-description {
+    line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .product-detail {
+        padding: 1.25rem;
+        gap: 1.5rem;
+    }
+
+    .product-thumbs {
+        padding-bottom: 0.5rem;
+    }
+
+    .product-thumbs::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .product-thumbs::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+    }
+}
+
+/* Footer */
+.footer-brand {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer-tagline {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    max-width: 280px;
+    line-height: 1.5;
+}
+
+.footer-link {
+    display: block;
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    transition: color 0.15s ease;
+}
+
+.footer-link:hover {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.footer-bottom {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}

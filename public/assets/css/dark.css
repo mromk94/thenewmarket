@@ -227,3 +227,18 @@ html[data-theme="dark"] .footer-links a:hover {
         --secondary: #7d7aff;
     }
 }
+
+html[data-theme="dark"] .product-stock-success {
+    background: rgba(74, 222, 128, 0.12);
+    color: #86efac;
+}
+
+html[data-theme="dark"] .product-stock-warning {
+    background: rgba(251, 191, 36, 0.12);
+    color: #facc15;
+}
+
+html[data-theme="dark"] .product-stock-danger {
+    background: rgba(248, 113, 113, 0.12);
+    color: #fca5a5;
+}
